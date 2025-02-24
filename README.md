@@ -1,1 +1,5 @@
-# standard_template
+# EDA via TDA
+
+```
+pip install pip-tools
+```
