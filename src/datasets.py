@@ -26,3 +26,5 @@ class LaboratoryData(Dataset):
         df_acc[cfg.label_column] = df_acc[cfg.label_column].apply(lambda x: x.astype(int))
 
         return df_acc
+
+datasets = {'lab_data': LaboratoryData()}
