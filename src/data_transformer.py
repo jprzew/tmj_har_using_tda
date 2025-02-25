@@ -101,8 +101,8 @@ def df_windower(df, window_size, window_step, scalar_columns):
         # .transpose() needed since apply understands columns as case indices
         new_df = new_row.apply(lambda x: pd.Series(x, dtype='object')).transpose()
 
-        scalars = row[df.columns[df.columns.isin(scalar_columns)]]  # filter empty scalars
-        new_df[df.columns[df.columns.isin(scalar_columns)]] = scalars
+        scalars = list(row[df.columns[df.columns.isin(scalar_columns)]])  # filter empty scalars
+        new_df.loc[:, df.columns[df.columns.isin(scalar_columns)]] = scalars
         return new_df
 
     if window_step > window_size:
