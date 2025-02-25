@@ -3,3 +3,5 @@ dvc
 dvc-ssh
 joblib
 camel-converter
+ripser
+scipy
