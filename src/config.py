@@ -14,7 +14,7 @@ augment_percent = 100
 augment_params = {'sigma': 5}
 augmenter = None
 partial_windows = False
-subsample = 40000
+subsample = False
 
 # Dataset metadata
 label_column = 'acc_gyro_event'
