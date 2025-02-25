@@ -157,7 +157,7 @@ def main():
     gc.collect()
 
     if cfg.subsample:
-        new_df.sample(40000).reset_index(drop=True).to_pickle(target_path)
+        new_df.sample(cfg.subsample).reset_index(drop=True).to_pickle(target_path)
     else:
         new_df.reset_index(drop=True).to_pickle(target_path)
 
