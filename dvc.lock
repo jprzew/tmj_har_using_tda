@@ -9,8 +9,8 @@ stages:
       size: 517
     - path: src/config.py
       hash: md5
-      md5: d951cd5f05300a30e819f77e0dca622e
-      size: 752
+      md5: 07f9254c5424aaa4cb62e360ed3637cf
+      size: 1797
     - path: src/data_transformer.py
       hash: md5
       md5: 2ab4a278083e22554f878a29019a177e
@@ -37,8 +37,8 @@ stages:
       size: 429301096
     - path: src/config.py
       hash: md5
-      md5: d951cd5f05300a30e819f77e0dca622e
-      size: 752
+      md5: 07f9254c5424aaa4cb62e360ed3637cf
+      size: 1797
     - path: src/data_transformer.py
       hash: md5
       md5: 2ab4a278083e22554f878a29019a177e
@@ -60,3 +60,35 @@ stages:
       hash: md5
       md5: 457e30030e42049eb2800d6ac406b947
       size: 2414582692
+  diagrams:
+    cmd: python src/diagrams.py
+    deps:
+    - path: data/data_prepared.pkl
+      hash: md5
+      md5: 457e30030e42049eb2800d6ac406b947
+      size: 2414582692
+    - path: src/config.py
+      hash: md5
+      md5: 07f9254c5424aaa4cb62e360ed3637cf
+      size: 1797
+    - path: src/data_transformer.py
+      hash: md5
+      md5: 2ab4a278083e22554f878a29019a177e
+      size: 23977
+    - path: src/datasets.py
+      hash: md5
+      md5: 84c909f0587bf5e4460c393d699c4d9d
+      size: 572
+    - path: src/diagrams.py
+      hash: md5
+      md5: 6e8f55758ba62356dfdb1878a855ae12
+      size: 3009
+    - path: src/utils.py
+      hash: md5
+      md5: ac1b61a398091f00e43715ee0075410f
+      size: 381
+    outs:
+    - path: data/diagrams.pkl
+      hash: md5
+      md5: b111c144f310752cca740c8465b4560f
+      size: 715347

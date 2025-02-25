@@ -20,3 +20,14 @@ stages:
     - src/datasets.py
     outs:
     - data/data_prepared.pkl
+  diagrams:
+    cmd: python src/diagrams.py
+    deps:
+    - data/data_prepared.pkl
+    - src/diagrams.py
+    - src/config.py
+    - src/data_transformer.py
+    - src/utils.py
+    - src/datasets.py
+    outs:
+    - data/diagrams.pkl
