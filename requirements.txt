@@ -154,6 +154,8 @@ idna==3.10
     #   yarl
 iterative-telemetry==0.0.10
     # via dvc
+joblib==1.4.2
+    # via -r requirements.in
 kombu==5.4.2
     # via
     #   celery
