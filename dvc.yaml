@@ -1,0 +1,22 @@
+stages:
+  compose:
+    cmd: python src/compose.py
+    deps:
+    - src/compose.py
+    - src/config.py
+    - src/data_transformer.py
+    - src/utils.py
+    - src/datasets.py
+    outs:
+    - data/data.pkl
+  prepare:
+    cmd: python src/prepare.py
+    deps:
+    - data/data.pkl
+    - src/prepare.py
+    - src/config.py
+    - src/data_transformer.py
+    - src/utils.py
+    - src/datasets.py
+    outs:
+    - data/data_prepared.pkl

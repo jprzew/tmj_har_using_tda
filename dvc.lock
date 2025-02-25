@@ -1,0 +1,62 @@
+schema: '2.0'
+stages:
+  compose:
+    cmd: python src/compose.py
+    deps:
+    - path: src/compose.py
+      hash: md5
+      md5: a82fa30f3df4f1d6f81f4ad67ec98ac4
+      size: 517
+    - path: src/config.py
+      hash: md5
+      md5: b17140a7a34052030cf623d62e606d88
+      size: 752
+    - path: src/data_transformer.py
+      hash: md5
+      md5: 7c9adad9190e5c1d6cd3ee481f5221fc
+      size: 23964
+    - path: src/datasets.py
+      hash: md5
+      md5: 84c909f0587bf5e4460c393d699c4d9d
+      size: 572
+    - path: src/utils.py
+      hash: md5
+      md5: ac1b61a398091f00e43715ee0075410f
+      size: 381
+    outs:
+    - path: data/data.pkl
+      hash: md5
+      md5: 2984ed34c838b39c92bb0653cd21d549
+      size: 429301096
+  prepare:
+    cmd: python src/prepare.py
+    deps:
+    - path: data/data.pkl
+      hash: md5
+      md5: 2984ed34c838b39c92bb0653cd21d549
+      size: 429301096
+    - path: src/config.py
+      hash: md5
+      md5: b17140a7a34052030cf623d62e606d88
+      size: 752
+    - path: src/data_transformer.py
+      hash: md5
+      md5: 7c9adad9190e5c1d6cd3ee481f5221fc
+      size: 23964
+    - path: src/datasets.py
+      hash: md5
+      md5: 84c909f0587bf5e4460c393d699c4d9d
+      size: 572
+    - path: src/prepare.py
+      hash: md5
+      md5: e457049ceb03aab72b4be583f907427c
+      size: 5938
+    - path: src/utils.py
+      hash: md5
+      md5: ac1b61a398091f00e43715ee0075410f
+      size: 381
+    outs:
+    - path: data/data_prepared.pkl
+      hash: md5
+      md5: a43e25b9437999d2651804543ae3be29
+      size: 2026591862
