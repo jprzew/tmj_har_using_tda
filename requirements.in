@@ -2,3 +2,4 @@ pandas
 dvc
 dvc-ssh
 joblib
+camel-converter
