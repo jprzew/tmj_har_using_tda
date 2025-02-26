@@ -8,6 +8,7 @@ from joblib import Memory
 from dvc.api import params_show
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
+from typing import Optional
 
 # Setting random seed
 # TODO: To refactor when needed
@@ -73,6 +74,15 @@ def calculate_feature_cached(feature_data):
     return calculate_feature(df=df, feature_data=feature_data)
 
 
+def restrict_data(df: pd.DataFrame, n: Optional[int]) -> pd.DataFrame:
+    """Restricts data so that each class has maximum n samples"""
+
+    if n is None:
+        return df
+
+    return df.groupby(cfg.label_column).sample(n)
+
+
 def main():
 
     global df
@@ -80,10 +90,15 @@ def main():
     # Read data
     df = pd.read_pickle(get_repo_path() / cfg.data_dir / cfg.prepare_target)
 
+    # Encode labels
+    df[cfg.label_column] = encode_data(df[cfg.label_column])
+
+    # Restrict data
+    df = restrict_data(df, cfg.restrict)
+
     # Prepare data to computation
     df['point_cloud'] = df[cfg.columns].apply(lambda x: np.stack((x.iloc[0], x.iloc[1]), axis=-1),
                                               axis=1)
-    df = df.head()  # TODO: Remove this line
 
     # Calculate diagrams
     print('Calculating diagrams...')
@@ -96,9 +111,7 @@ def main():
     result_df = pd.concat(results, axis=1)
 
     # Add label column to the result_df
-    label = encode_data(df[cfg.label_column])
-    label.name = cfg.label_column
-    result_df = result_df.join(label)
+    result_df = result_df.join(df[cfg.label_column])
 
     # Save results
     result_df.to_pickle(get_repo_path() / cfg.data_dir/ cfg.diagrams_target)
