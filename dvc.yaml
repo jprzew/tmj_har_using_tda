@@ -32,3 +32,14 @@ stages:
     outs:
     - data/diagrams.pkl
     frozen: true
+  featurize:
+    cmd: python src/featurize.py
+    deps:
+      - data/diagrams.pkl
+      - src/featurize.py
+      - src/config.py
+      - src/data_transformer.py
+      - src/utils.py
+      - src/datasets.py
+    outs:
+      - data/features.pkl

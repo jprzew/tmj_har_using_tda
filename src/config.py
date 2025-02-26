@@ -35,6 +35,10 @@ to_calculate = [FeatureData(name='diagram', params={'dim': 2}),
                 FeatureData(name='diagram', params={'dim': 2, 'step': 30}),
                 FeatureData(name='diagram', params={'dim': 4, 'step': 30})]
 
+# Feature stage
+features_target = 'features.pkl'
+
+
 # Dataset metadata
 label_column = 'acc_gyro_event'
 timestamp_column = 'acc_gyro_timestamp'
