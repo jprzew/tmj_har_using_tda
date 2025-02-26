@@ -31,3 +31,4 @@ stages:
     - src/datasets.py
     outs:
     - data/diagrams.pkl
+    frozen: true
