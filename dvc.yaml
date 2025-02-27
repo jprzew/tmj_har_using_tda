@@ -31,7 +31,7 @@ stages:
     - src/datasets.py
     outs:
     - data/diagrams.pkl
-    frozen: true
+    # frozen: true
   featurize:
     cmd: python src/featurize.py
     deps:

@@ -13,7 +13,8 @@ from typing import Optional
 # Setting random seed
 # TODO: To refactor when needed
 # params = params_show()['diagrams']
-# np.random.seed(params['random_seed'])
+RANDOM_SEED = 42
+np.random.seed(RANDOM_SEED)
 
 # Prepare caching
 CACHEDIR = get_repo_path() / '.cache'
