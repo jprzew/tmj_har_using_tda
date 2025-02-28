@@ -5,3 +5,5 @@ joblib
 camel-converter
 ripser
 scipy
+jupyter
+jupytext
