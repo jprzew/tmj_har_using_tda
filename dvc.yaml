@@ -43,3 +43,15 @@ stages:
       - src/datasets.py
     outs:
       - data/features.pkl
+  rfe_reduce:
+    cmd: python src/rfe_reduce.py
+    deps:
+      - data/features.pkl
+      - src/spotcheck.py
+      - src/rfe_reduce.py
+      - src/config.py
+      - src/data_transformer.py
+      - src/utils.py
+      - src/datasets.py
+    outs:
+      - metrics/rfe_reduce.pkl
