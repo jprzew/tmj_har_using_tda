@@ -114,6 +114,9 @@ def main():
     # Add label column to the result_df
     result_df = result_df.join(df[cfg.label_column])
 
+    # Add patient column to the result_df
+    result_df = result_df.join(df[cfg.patient_column])
+
     # Save results
     result_df.to_pickle(get_repo_path() / cfg.data_dir/ cfg.diagrams_target)
 
