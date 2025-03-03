@@ -54,4 +54,4 @@ stages:
       - src/utils.py
       - src/datasets.py
     outs:
-      - metrics/rfe_reduce.pkl
+      - metrics/rfe_results.pkl

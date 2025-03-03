@@ -28,6 +28,9 @@ def main():
     results_df = pd.concat(results, axis=1)
     results_df = results_df.join(diagrams[cfg.label_column])
 
+    # Add patient column to the results_df
+    results_df = results_df.join(diagrams[cfg.patient_column])
+
     # Save to file
     results_df.to_pickle(get_repo_path() / cfg.data_dir / cfg.features_target)
 

@@ -39,6 +39,9 @@ to_calculate = [FeatureData(name='diagram', params={'dim': 2}),
 features_target = 'features.pkl'
 
 
+# RFE reduce
+rfe_groups = True
+
 # Dataset metadata
 label_column = 'acc_gyro_event'
 timestamp_column = 'acc_gyro_timestamp'

@@ -113,8 +113,8 @@ stages:
       size: 572
     - path: src/featurize.py
       hash: md5
-      md5: 46d71b0bb35298e39c06e5047010152c
-      size: 1220
+      md5: f29aa24549c7520a0d399813ece45a50
+      size: 1327
     - path: src/utils.py
       hash: md5
       md5: ac1b61a398091f00e43715ee0075410f
@@ -122,5 +122,5 @@ stages:
     outs:
     - path: data/features.pkl
       hash: md5
-      md5: 81ea7fac174ae1256e188c561f416927
-      size: 4644874
+      md5: b034137a00ae581dfeb923c7611d9bf3
+      size: 4655031

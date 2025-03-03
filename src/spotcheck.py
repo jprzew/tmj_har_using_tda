@@ -54,6 +54,14 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.pipeline import Pipeline
 
+from dataclasses import dataclass
+
+@dataclass
+class TrainingData:
+    X: np.ndarray
+    y: np.ndarray
+    groups: np.ndarray
+
 
 def spot_check_cross_validation(X, y, k_fold=10, test_size=0.10,
                                 random_state=None):
@@ -241,19 +249,22 @@ def summarize_results(results, maximize=True, top_n=10):
 
 
 # load the dataset, returns X and y elements
-def load_dataset():
+def load_dataset() -> TrainingData:
 
     df = pd.read_pickle(get_repo_path() / cfg.data_dir / cfg.features_target)
 
     y = np.array(df[cfg.label_column])
     X = np.array(df.drop(columns=[cfg.label_column]))
+    groups = np.array(df[cfg.patient_column])
 
-    return X, y
+    return TrainingData(X, y, groups)
 
 
 def main():
     # load dataset
-    X, y = load_dataset()
+    training_data = load_dataset()
+    X, y = training_data.X, training_data.y
+
     # get model list
     models = get_models()
     # evaluate models

@@ -8,13 +8,14 @@ import warnings
 from tqdm import tqdm
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, GroupKFold
 from sklearn.feature_selection import RFECV
 import pandas as pd
 
 # Local imports
-from spotcheck import load_dataset, get_models, make_pipeline
+from spotcheck import load_dataset, get_models, make_pipeline, TrainingData
 from utils import get_repo_path
+import config as cfg
 
 # Parameters
 CYCLES_TO_RUN = 1
@@ -41,14 +42,19 @@ def ignore_user_warning(func):
 
 
 @ignore_user_warning
-def persistent_elimination(X, y, base_estimator, max_steps=30):
+def persistent_elimination(training_data: TrainingData, base_estimator, groups=False, max_steps=30):
+
+    X = training_data.X
     results = []
     for _ in tqdm(range(max_steps)):
 
         # TODO: Consider using weights
         # base_estimator = RandomForestClassifier(n_estimators=N_ESTIMATORS)
 
-        crossvalidator = KFold(n_splits=5)
+        if groups:
+            crossvalidator = GroupKFold(n_splits=5)
+        else:
+            crossvalidator = KFold(n_splits=10)
 
         rfecv = RFECV(step=1,
                       min_features_to_select=1,
@@ -58,7 +64,7 @@ def persistent_elimination(X, y, base_estimator, max_steps=30):
                       scoring='accuracy',
                       importance_getter='named_steps.model.feature_importances_')
 
-        rfecv.fit(X, y)
+        rfecv.fit(X, training_data.y, groups=training_data.groups)
 
         results.append(rfecv)
 
@@ -90,18 +96,21 @@ def get_protein_ranking(results, feature_names):
     return results_df.fillna(0).apply(sum, axis=1).sort_values(ascending=False)
 
 
-def shuffle_data(X, y):
+def shuffle_data(training_data: TrainingData) -> TrainingData:
     # Shuffle data
-    indices = np.arange(X.shape[0])
+    indices = np.arange(training_data.X.shape[0])
     np.random.shuffle(indices)
 
-    return X[indices], y[indices]
+    return TrainingData(X = training_data.X[indices],
+                        y = training_data.y[indices],
+                        groups = training_data.groups[indices])
 
 
 def main():
 
-    X, y = load_dataset()
-    X, y = shuffle_data(X, y)
+    training_data = load_dataset()
+
+    training_data = shuffle_data(training_data)
 
 
     model = make_pipeline(get_models()['rf'])
@@ -109,7 +118,7 @@ def main():
     results = []
     for cycle in range(CYCLES_TO_RUN):
         print('Cycle:', cycle)
-        results.append(persistent_elimination(X, y, base_estimator=model))
+        results.append(persistent_elimination(training_data, base_estimator=model, groups=cfg.rfe_groups))
 
     # Save results
     with open(get_repo_path() / RESULTS_FILE, 'wb') as f:
