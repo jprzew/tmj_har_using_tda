@@ -3,9 +3,8 @@
 import config as cfg
 import pandas as pd
 
-from modurec.features.feature import FeatureData
 from utils import get_repo_path
-from modurec.features.feature import calculate_feature
+from modurec.features.feature import calculate_feature, FeatureData
 from joblib import Memory
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
