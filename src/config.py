@@ -20,7 +20,7 @@ subsample = False
 
 # Diagrams stage
 diagrams_target = 'diagrams.pkl'
-restrict = 3
+restrict = 60
 columns = {'xy': ['acc_x', 'acc_y'], 'xz': ['acc_x', 'acc_z'], 'yz': ['acc_y', 'acc_z']}
 to_calculate = [FeatureData(name='diagram', params={'dim': 2}),
                 FeatureData(name='diagram', params={'dim': 3}),

@@ -3,7 +3,7 @@
 import config as cfg
 import pandas as pd
 
-from src.modurec.features.feature import FeatureData
+from modurec.features.feature import FeatureData
 from utils import get_repo_path
 from modurec.features.feature import calculate_feature
 from joblib import Memory
