@@ -2,10 +2,11 @@
 
 import config as cfg
 import pandas as pd
+
+from src.modurec.features.feature import FeatureData
 from utils import get_repo_path
 from modurec.features.feature import calculate_feature
 from joblib import Memory
-from dvc.api import params_show
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 from typing import Optional
@@ -21,7 +22,7 @@ CACHEDIR = get_repo_path() / '.cache'
 memory = Memory(CACHEDIR, verbose=0)
 
 # Global data frame
-df = None
+df = pd.DataFrame()
 
 
 class WindowEncoder:
@@ -67,7 +68,7 @@ def encode_data(data):
 
 
 @memory.cache
-def calculate_feature_cached(feature_data):
+def calculate_feature_cached(hash_value: str, feature_data: FeatureData) -> pd.Series:
     """Cached version of calculate_feature"""
 
     global df
@@ -84,7 +85,8 @@ def restrict_data(df: pd.DataFrame, n: Optional[int]) -> pd.DataFrame:
     return df.groupby(cfg.label_column).sample(n)
 
 
-def main():
+def compute_diagrams(key, columns: list[str, str]) -> pd.DataFrame:
+    """Computes diagrams from the given columns. Uses global dataframe df."""
 
     global df
 
@@ -97,17 +99,16 @@ def main():
     # Restrict data
     df = restrict_data(df, cfg.restrict)
 
-    # Prepare data to computation
-    df['point_cloud'] = df[cfg.columns].apply(lambda x: np.stack((x.iloc[0], x.iloc[1]), axis=-1),
-                                              axis=1)
 
-    # Calculate diagrams
-    print('Calculating diagrams...')
+    # Create point cloud
+    df['point_cloud'] = df[columns].apply(lambda x: np.stack((x.iloc[0], x.iloc[1]), axis=-1),
+                                          axis=1)
+
     results = []
     for case, feature_data in enumerate(cfg.to_calculate):
         print(f'Calculating {case+1}/{len(cfg.to_calculate)}. Feature data: {feature_data}')
         print('------------------------')
-        results.append(calculate_feature_cached(feature_data=feature_data))
+        results.append(calculate_feature_cached(hash_value=key, feature_data=feature_data))
 
     result_df = pd.concat(results, axis=1)
 
@@ -117,8 +118,22 @@ def main():
     # Add patient column to the result_df
     result_df = result_df.join(df[cfg.patient_column])
 
+    return result_df
+
+
+def main():
+
+    print('Calculating diagrams...')
+    diagrams = {}
+    for key, value in cfg.columns.items():
+        print(f'Calculating diagrams for {key}')
+        print('===============================')
+        result_df = compute_diagrams(key, value)
+        diagrams[key] = result_df
+
     # Save results
-    result_df.to_pickle(get_repo_path() / cfg.data_dir/ cfg.diagrams_target)
+    with open(get_repo_path() / cfg.data_dir / cfg.diagrams_target, 'wb') as f:
+        pd.to_pickle(diagrams, f)
 
     # Clean cache
     memory.clear(warn=False)
