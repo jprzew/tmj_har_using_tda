@@ -44,7 +44,7 @@ def main():
         results[key] = compute_features(key, value)
 
     # Save to file
-    with open(get_repo_path() / cfg.data_dir / cfg.diagrams_target, 'wb') as f:
+    with open(get_repo_path() / cfg.data_dir / cfg.features_target, 'wb') as f:
         pd.to_pickle(results, f)
 
 
