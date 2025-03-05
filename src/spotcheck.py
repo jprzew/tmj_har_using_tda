@@ -60,6 +60,7 @@ from dataclasses import dataclass
 class TrainingData:
     X: np.ndarray
     y: np.ndarray
+    feature_names: list[str]
     groups: np.ndarray
 
 
@@ -248,16 +249,53 @@ def summarize_results(results, maximize=True, top_n=10):
     pyplot.savefig('spotcheck.png')
 
 
+def extract_invariant_columns(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Utility function to extract columns which do not depend on highest level of the MultiIndex
+    Args:
+        df: DataFrame with MultiIndex columns each stratum has the same column names
+
+    Returns:
+        A pair of dataframes: the first contains invariant columns,
+        the second contains df with invariant columns removed
+    """
+
+    # Compare columns to see which of them do not depend on stratum
+    comparisons = []
+    for column1, column2 in zip(df.columns.levels[0][:-1], df.columns.levels[0][1:]):
+        comparisons.append((df[column1] == df[column2]).all())
+
+    if not comparisons:
+        raise ValueError("No columns to compare")
+
+    is_column_invariant = pd.concat(comparisons, axis=1).all(axis=1)  # Series with True for invariant columns
+    invariant_columns = is_column_invariant[is_column_invariant].index
+
+    return df[column1][invariant_columns], df.drop(invariant_columns, axis=1, level=1)
+
+
+def extract_dataframes(dictionary: dict[str, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
+    df = pd.concat(dictionary, axis=1)
+
+    invariant_df, filtered_df = extract_invariant_columns(df)
+
+    # Rename columns to remove MultiIndex
+    filtered_df.columns = filtered_df.columns.map(lambda x: f"{x[1]}_{x[0]}")
+
+    return invariant_df, filtered_df
+
+
 # load the dataset, returns X and y elements
 def load_dataset() -> TrainingData:
 
-    df = pd.read_pickle(get_repo_path() / cfg.data_dir / cfg.features_target)
+    results = pd.read_pickle(get_repo_path() / cfg.data_dir / cfg.features_target)
+    invariant_df, filtered_df = extract_dataframes(results)
 
-    y = np.array(df[cfg.label_column])
-    X = np.array(df.drop(columns=[cfg.label_column]))
-    groups = np.array(df[cfg.patient_column])
+    y = np.array(invariant_df[cfg.label_column])
+    X = np.array(filtered_df)
+    groups = np.array(invariant_df[cfg.patient_column])
+    feature_names = list(filtered_df.columns)
 
-    return TrainingData(X, y, groups)
+    return TrainingData(X, y, feature_names, groups)
 
 
 def main():
