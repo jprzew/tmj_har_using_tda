@@ -8,16 +8,11 @@ from feature_list import all_features
 from modurec.features.feature import calculate_feature
 
 
-def main():
+def compute_features(key: str, diagrams: pd.DataFrame) -> pd.DataFrame:
 
-    # Reading the diagrams
-    diagrams = pd.read_pickle(get_repo_path() / cfg.data_dir / cfg.diagrams_target)
-
-    # Calculate features
-    print('Calculating features...')
     results = []
     for case, feature_data in enumerate(all_features):
-        print(f'Calculating {case+1}/{len(all_features)}. Feature data: {feature_data}')
+        print(f'Calculating {case+1}/{len(all_features)}. Key: {key}, Feature data: {feature_data}')
         print('------------------------')
         with warnings.catch_warnings(record=True) as w:
             results.append(calculate_feature(df=diagrams, feature_data=feature_data))
@@ -31,8 +26,26 @@ def main():
     # Add patient column to the results_df
     results_df = results_df.join(diagrams[cfg.patient_column])
 
+    return results_df
+
+
+def main():
+
+    # Reading the diagrams
+    diagrams = pd.read_pickle(get_repo_path() / cfg.data_dir / cfg.diagrams_target)
+
+    # Calculate features
+    print('Calculating features...')
+
+    results = {}
+    for key, value in diagrams.items():
+        print(f'Calculating features for {key}')
+        print('===============================')
+        results[key] = compute_features(key, value)
+
     # Save to file
-    results_df.to_pickle(get_repo_path() / cfg.data_dir / cfg.features_target)
+    with open(get_repo_path() / cfg.data_dir / cfg.diagrams_target, 'wb') as f:
+        pd.to_pickle(results, f)
 
 
 if __name__ == '__main__':
