@@ -85,20 +85,12 @@ def restrict_data(df: pd.DataFrame, n: Optional[int]) -> pd.DataFrame:
     return df.groupby(cfg.label_column).sample(n)
 
 
-def compute_diagrams(key, columns: list[str, str]) -> pd.DataFrame:
+def compute_diagrams(original_df: pd.DataFrame, key: str, columns: list[str, str]) -> pd.DataFrame:
     """Computes diagrams from the given columns. Uses global dataframe df."""
 
     global df
 
-    # Read data
-    df = pd.read_pickle(get_repo_path() / cfg.data_dir / cfg.prepare_target)
-
-    # Encode labels
-    df[cfg.label_column] = encode_data(df[cfg.label_column])
-
-    # Restrict data
-    df = restrict_data(df, cfg.restrict)
-
+    df = original_df.copy()
 
     # Create point cloud
     df['point_cloud'] = df[columns].apply(lambda x: np.stack((x.iloc[0], x.iloc[1]), axis=-1),
@@ -123,12 +115,21 @@ def compute_diagrams(key, columns: list[str, str]) -> pd.DataFrame:
 
 def main():
 
+    # Read data
+    original_df = pd.read_pickle(get_repo_path() / cfg.data_dir / cfg.prepare_target)
+
+    # Encode labels
+    original_df[cfg.label_column] = encode_data(original_df[cfg.label_column])
+
+    # Restrict data
+    original_df = restrict_data(original_df, cfg.restrict)
+
     print('Calculating diagrams...')
     diagrams = {}
     for key, value in cfg.columns.items():
         print(f'Calculating diagrams for {key}')
         print('===============================')
-        result_df = compute_diagrams(key, value)
+        result_df = compute_diagrams(original_df, key, value)
         diagrams[key] = result_df
 
     # Save results
