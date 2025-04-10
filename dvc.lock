@@ -5,8 +5,8 @@ stages:
     deps:
     - path: src/compose.py
       hash: md5
-      md5: a82fa30f3df4f1d6f81f4ad67ec98ac4
-      size: 517
+      md5: fb702c7a0b38855c8ec838318a8906d2
+      size: 671
     - path: src/config.py
       hash: md5
       md5: c54832e73e13b0177be7b38547ba531d

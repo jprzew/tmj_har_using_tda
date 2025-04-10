@@ -4,11 +4,11 @@ from modurec.features.feature import FeatureData
 data_dir = 'data'
 
 # Compose stage
-dataset = 'lab_data'
-compose_target = 'data.pkl'
+dataset = 'lab_data'  # DONE
+compose_target = 'data.pkl' # DONE
 
 # Prepare stage
-prepare_target = 'data_prepared.pkl'
+prepare_target = 'data_prepared.pkl'  # DONE
 window_size = 700
 window_step = 100
 random_seed = 42
@@ -19,7 +19,7 @@ partial_windows = False
 subsample = False
 
 # Diagrams stage
-diagrams_target = 'diagrams.pkl'
+diagrams_target = 'diagrams.pkl'  # DONE
 restrict = 1000
 columns = {'xy': ['acc_x', 'acc_y'], 'xz': ['acc_x', 'acc_z'], 'yz': ['acc_y', 'acc_z']}
 to_calculate = [FeatureData(name='diagram', params={'dim': 2}),
@@ -36,7 +36,7 @@ to_calculate = [FeatureData(name='diagram', params={'dim': 2}),
                 FeatureData(name='diagram', params={'dim': 4, 'step': 30})]
 
 # Feature stage
-features_target = 'features.pkl'
+features_target = 'features.pkl'  # DONE
 
 
 # RFE reduce
