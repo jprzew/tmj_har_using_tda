@@ -35,4 +35,4 @@ metadata:
   measure_column: measure_id
   augment_column: augmented
 directories:
-- data: data
+  data: data

@@ -20,11 +20,14 @@ params = dvc.api.params_show()
 output = params['compose']['output']
 dataset = params['compose']['dataset']
 
+# Metadata
+data_dir = params['directories']['data']
+
 
 datasets_dict = datasets.datasets
 
 # script parameters
-target_path = get_repo_path() / cfg.data_dir / output
+target_path = get_repo_path() / data_dir / output
 
 df = datasets_dict[dataset].get_dataset()
 
