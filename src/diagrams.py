@@ -2,8 +2,10 @@
 
 import config as cfg
 import pandas as pd
+import dvc.api
+from dataclasses import dataclass
 
-from utils import get_repo_path
+from utils import get_repo_path, get_metadata
 from modurec.features.feature import calculate_feature, FeatureData
 from joblib import Memory
 import numpy as np
@@ -19,6 +21,29 @@ np.random.seed(RANDOM_SEED)
 # Prepare caching
 CACHEDIR = get_repo_path() / '.cache'
 memory = Memory(CACHEDIR, verbose=0)
+
+@dataclass
+class Params:
+    input: str
+    output: str
+    restrict: int
+    columns: dict
+    params: list
+
+# Load metadata
+meta = get_metadata()
+
+# Get the DVC parameters
+params = dvc.api.params_show()
+
+# Data dir
+data_dir = params['directories']['data']
+
+# Stage parameters
+params_dict = {**{'input': params['prepare']['output']}, **params['diagrams']}
+params = Params(**params_dict)
+
+import pdb; pdb.set_trace()
 
 # Global data frame
 df = pd.DataFrame()

@@ -14,6 +14,40 @@ prepare:
   subsample: false
 diagrams:
   output: diagrams.pkl
+  restrict: 2
+  columns:
+    xy:
+    - acc_x
+    - acc_y
+    xz:
+    - acc_x
+    - acc_z
+    yz:
+    - acc_y
+    - acc_z
+  params:
+  - dim: 2
+  - dim: 3
+  - dim: 4
+  - dim: 10
+  - dim: 2
+    kind: abs
+  - dim: 10
+    kind: abs
+  - dim: 2
+    kind: phi
+  - dim: 10
+    kind: phi
+  - dim: 2
+    kind: abs
+    fil: star
+  - dim: 2
+    kind: phi
+    fil: star
+  - dim: 2
+    step: 30
+  - dim: 4
+    step: 30
 featurize:
   output: features.pkl
 metadata:
