@@ -7,3 +7,4 @@ ripser
 scipy
 jupyter
 jupytext
+hydra-core
