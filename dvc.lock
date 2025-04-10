@@ -9,8 +9,8 @@ stages:
       size: 517
     - path: src/config.py
       hash: md5
-      md5: 1301b6f802268195015d54dc8bdc37c5
-      size: 1956
+      md5: c54832e73e13b0177be7b38547ba531d
+      size: 1995
     - path: src/data_transformer.py
       hash: md5
       md5: 2ab4a278083e22554f878a29019a177e
@@ -23,6 +23,11 @@ stages:
       hash: md5
       md5: ac1b61a398091f00e43715ee0075410f
       size: 381
+    params:
+      params.yaml:
+        compose:
+          dataset: lab_data
+          output: data.pkl
     outs:
     - path: data/data.pkl
       hash: md5
@@ -37,8 +42,8 @@ stages:
       size: 429301096
     - path: src/config.py
       hash: md5
-      md5: 1301b6f802268195015d54dc8bdc37c5
-      size: 1956
+      md5: 15ef3994485df4fb3dd647d60b9a3af1
+      size: 1971
     - path: src/data_transformer.py
       hash: md5
       md5: 2ab4a278083e22554f878a29019a177e

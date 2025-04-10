@@ -7,46 +7,54 @@ stages:
     - src/data_transformer.py
     - src/utils.py
     - src/datasets.py
+    params:
+      - compose
     outs:
-    - data/data.pkl
+    - data/${compose.output}
   prepare:
     cmd: python src/prepare.py
     deps:
-    - data/data.pkl
+    - data/${compose.output}
     - src/prepare.py
     - src/config.py
     - src/data_transformer.py
     - src/utils.py
     - src/datasets.py
+    params:
+      - prepare
     outs:
-    - data/data_prepared.pkl
+    - data/${prepare.output}
   diagrams:
     cmd: python src/diagrams.py
     deps:
-    - data/data_prepared.pkl
+    - data/${prepare.output}
     - src/diagrams.py
     - src/config.py
     - src/data_transformer.py
     - src/utils.py
     - src/datasets.py
+    params:
+      - diagrams
     outs:
-    - data/diagrams.pkl
+    - data/${diagrams.output}
     # frozen: true
   featurize:
     cmd: python src/featurize.py
     deps:
-      - data/diagrams.pkl
+      - data/${diagrams.output}
       - src/featurize.py
       - src/config.py
       - src/data_transformer.py
       - src/utils.py
       - src/datasets.py
+    params:
+      - featurize
     outs:
-      - data/features.pkl
+      - data/${featurize.output}
   rfe_reduce:
     cmd: python src/rfe_reduce.py
     deps:
-      - data/features.pkl
+      - data/${featurize.output}
       - src/spotcheck.py
       - src/rfe_reduce.py
       - src/config.py
