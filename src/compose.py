@@ -8,7 +8,6 @@ This script is run as a DVC-stage. Inputs, outputs and parameters defined in: dv
 import dvc.api
 
 # Local imports
-import config as cfg
 from utils import get_repo_path
 import datasets
 
