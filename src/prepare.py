@@ -11,11 +11,40 @@ from numpy.random import seed as random_seed
 # Third-party imports
 import pandas as pd
 import numpy as np
+from dataclasses import dataclass
+import dvc.api
 
 # Local imports
-import config as cfg
-from utils import get_repo_path
+# import config as cfg
+from utils import get_repo_path, get_metadata
 from data_transformer import df_windower
+
+
+@dataclass
+class Params:
+    input: str
+    output: str
+    window_size: int
+    window_step: int
+    random_seed: int
+    augment_percent: int
+    augment_params: dict
+    augmenter: str
+    partial_windows: bool
+    subsample: bool
+
+# Load metadata
+meta = get_metadata()
+
+# Get the DVC parameters
+params = dvc.api.params_show()
+
+# Data dir
+data_dir = params['directories']['data']
+
+# Stage parameters
+params_dict = {**{'input': params['compose']['output']}, **params['prepare']}
+params = Params(**params_dict)
 
 
 class Prepare:
@@ -64,17 +93,17 @@ class Prepare:
             """Takes as an input single row of data_raw (i.e. x is a single recording)
                Then replaces the whole event with a given timestamp with a new event
                (the whole event, not the single sample)"""
-            event_index = np.where(x[cfg.timestamp_column] == timestamp)[0]
+            event_index = np.where(x[meta.timestamp_column] == timestamp)[0]
             if event_index.size == 0:
                 return
 
-            event = x[cfg.label_column][event_index]
-            other_events = np.where(x[cfg.label_column] != event)[0]
+            event = x[meta.label_column][event_index]
+            other_events = np.where(x[meta.label_column] != event)[0]
 
             infimum = max([index for index in other_events if index < event_index])
             supremum = min([index for index in other_events if index > event_index])
 
-            x[cfg.label_column][infimum+1:supremum] = new_event
+            x[meta.label_column][infimum+1:supremum] = new_event
 
         df.apply(_replace_event_in_row, axis=1)
 
@@ -89,18 +118,18 @@ class Prepare:
         def _count_add_row(x, events=events):
             events += Counter(x)
 
-        df[cfg.label_column].apply(_count_add_row)
+        df[meta.label_column].apply(_count_add_row)
         dict_events = {key: value / 700 for (key, value) in dict(events).items()}
         return pd.DataFrame([dict_events]).round(2)
 
     @staticmethod
     def remove_partial_window(df):
-        new_df = df[df[cfg.label_column].apply(lambda x: len(np.unique(x)) == 1)]
+        new_df = df[df[meta.label_column].apply(lambda x: len(np.unique(x)) == 1)]
         return new_df.reset_index(drop=True)
 
     @staticmethod
     def remove_wrong_labels(df):
-        return df[df[cfg.label_column].apply(lambda x: set(x) <= set(cfg.correct_labels))]
+        return df[df[meta.label_column].apply(lambda x: set(x) <= set(meta.correct_labels))]
 
     # @staticmethod
     # def data_augmenter(df, percent, augmenter, seed=42, **kwargs):
@@ -122,12 +151,12 @@ class Prepare:
         df = Prepare.prepare_preprocess(df)
 
         df = df_windower(df,
-                         window_size=cfg.window_size,
-                         window_step=cfg.window_step,
-                         scalar_columns=cfg.scalar_columns)
+                         window_size=params.window_size,
+                         window_step=params.window_step,
+                         scalar_columns=meta.scalar_columns)
         df = Prepare.remove_wrong_labels(df)
 
-        if not cfg.partial_windows:
+        if not params.partial_windows:
             df = Prepare.remove_partial_window(df)
 
         # df = Prepare.data_augmenter(df,
@@ -145,10 +174,9 @@ class Prepare:
 
 
 def main():
-    # Script parameters
-    data_path = get_repo_path() / cfg.data_dir / cfg.compose_target
-    target_path = get_repo_path() / cfg.data_dir / cfg.prepare_target
 
+    data_path = get_repo_path() / data_dir / params.input
+    target_path = get_repo_path() / data_dir / params.output
 
     df = pd.read_pickle(data_path)
     new_df = Prepare.prepare(df)
@@ -156,8 +184,8 @@ def main():
     del df
     gc.collect()
 
-    if cfg.subsample:
-        new_df.sample(cfg.subsample).reset_index(drop=True).to_pickle(target_path)
+    if params.subsample:
+        new_df.sample(params.subsample).reset_index(drop=True).to_pickle(target_path)
     else:
         new_df.reset_index(drop=True).to_pickle(target_path)
 

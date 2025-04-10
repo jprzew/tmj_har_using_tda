@@ -1,1 +1,10 @@
 output: data_prepared.pkl
+window_size: 700
+window_step: 100
+random_seed: 42
+augment_percent: 100
+augment_params:
+  sigma: 5
+augmenter: None
+partial_windows: False
+subsample: False

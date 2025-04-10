@@ -5,12 +5,12 @@ stages:
     deps:
     - path: src/compose.py
       hash: md5
-      md5: 0cd8bd7ee12e132a03325add7fe88a81
-      size: 710
+      md5: 734de3875c6f0a8e4f36d1d039730544
+      size: 699
     - path: src/config.py
       hash: md5
-      md5: c54832e73e13b0177be7b38547ba531d
-      size: 1995
+      md5: 7d6c74cab972ce2f0229e9df095ad8b2
+      size: 2002
     - path: src/data_transformer.py
       hash: md5
       md5: 2ab4a278083e22554f878a29019a177e
@@ -21,8 +21,8 @@ stages:
       size: 572
     - path: src/utils.py
       hash: md5
-      md5: ac1b61a398091f00e43715ee0075410f
-      size: 381
+      md5: 9ab1831186b26fc602f4b406f4d6cd60
+      size: 1043
     params:
       params.yaml:
         compose:
@@ -42,8 +42,8 @@ stages:
       size: 429301096
     - path: src/config.py
       hash: md5
-      md5: 15ef3994485df4fb3dd647d60b9a3af1
-      size: 1971
+      md5: 7d6c74cab972ce2f0229e9df095ad8b2
+      size: 2002
     - path: src/data_transformer.py
       hash: md5
       md5: 2ab4a278083e22554f878a29019a177e
@@ -54,12 +54,25 @@ stages:
       size: 572
     - path: src/prepare.py
       hash: md5
-      md5: e01b6e628a613e370baf7c0460a739fd
-      size: 5946
+      md5: 5777e2403b21a64efc2106086b1ef1e2
+      size: 6506
     - path: src/utils.py
       hash: md5
-      md5: ac1b61a398091f00e43715ee0075410f
-      size: 381
+      md5: 9ab1831186b26fc602f4b406f4d6cd60
+      size: 1043
+    params:
+      params.yaml:
+        prepare:
+          output: data_prepared.pkl
+          window_size: 700
+          window_step: 100
+          random_seed: 42
+          augment_percent: 100
+          augment_params:
+            sigma: 5
+          augmenter: None
+          partial_windows: false
+          subsample: false
     outs:
     - path: data/data_prepared.pkl
       hash: md5
