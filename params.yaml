@@ -1,0 +1,38 @@
+compose:
+  dataset: lab_data
+  output: data.pkl
+prepare:
+  output: data_prepared.pkl
+diagrams:
+  output: diagrams.pkl
+featurize:
+  output: features.pkl
+metadata:
+  label_column: acc_gyro_event
+  timestamp_column: acc_gyro_timestamp
+  correct_labels:
+  - 0
+  - 1
+  - 2
+  - 4
+  - 8
+  timestamp_multiplier: 0.0001
+  signal_columns:
+    acc:
+    - acc_x
+    - acc_y
+    - acc_z
+    gyro:
+    - gyro_x
+    - gyro_y
+    - gyro_z
+  scalar_columns:
+  - patient_id
+  - measure_id
+  - augmented
+  datetime_column: packet_start_time
+  patient_column: patient_id
+  measure_column: measure_id
+  augment_column: augmented
+directories:
+- data: data

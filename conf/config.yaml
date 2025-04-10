@@ -1,0 +1,9 @@
+directories:
+  - data: data
+defaults:
+  - compose: default
+  - prepare: default
+  - diagrams: default
+  - featurize: default
+  - metadata: default
+
