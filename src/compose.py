@@ -20,10 +20,10 @@ params = dvc.api.params_show()
 output = params['compose']['output']
 dataset = params['compose']['dataset']
 
-# Metadata
+# Data dir
 data_dir = params['directories']['data']
 
-
+# Datasets
 datasets_dict = datasets.datasets
 
 # script parameters
