@@ -1,6 +1,6 @@
 """Calculates persistence diagrams"""
 
-import config as cfg
+# import config as cfg
 import pandas as pd
 import dvc.api
 from dataclasses import dataclass
@@ -43,10 +43,16 @@ data_dir = params['directories']['data']
 params_dict = {**{'input': params['prepare']['output']}, **params['diagrams']}
 params = Params(**params_dict)
 
-import pdb; pdb.set_trace()
-
 # Global data frame
 df = pd.DataFrame()
+
+
+# Generate FeatureData out of the parameters
+def generate_feature_data() -> list[FeatureData]:
+    """Generates FeatureData out of the parameters in global variable params"""
+
+    return list(map(lambda values: FeatureData(name='diagram', params=values),
+                    params.params))
 
 
 class WindowEncoder:
@@ -106,7 +112,7 @@ def restrict_data(df: pd.DataFrame, n: Optional[int]) -> pd.DataFrame:
     if n is None:
         return df
 
-    return df.groupby(cfg.label_column).sample(n)
+    return df.groupby(meta.label_column).sample(n)
 
 
 def compute_diagrams(original_df: pd.DataFrame, key: str, columns: list[str, str]) -> pd.DataFrame:
@@ -121,18 +127,18 @@ def compute_diagrams(original_df: pd.DataFrame, key: str, columns: list[str, str
                                           axis=1)
 
     results = []
-    for case, feature_data in enumerate(cfg.to_calculate):
-        print(f'Calculating {case+1}/{len(cfg.to_calculate)}. Feature data: {feature_data}')
+    for case, feature_data in enumerate(generate_feature_data()):
+        print(f'Calculating {case+1}/{len(generate_feature_data())}. Feature data: {feature_data}')
         print('------------------------')
         results.append(calculate_feature_cached(hash_value=key, feature_data=feature_data))
 
     result_df = pd.concat(results, axis=1)
 
     # Add label column to the result_df
-    result_df = result_df.join(df[cfg.label_column])
+    result_df = result_df.join(df[meta.label_column])
 
     # Add patient column to the result_df
-    result_df = result_df.join(df[cfg.patient_column])
+    result_df = result_df.join(df[meta.patient_column])
 
     return result_df
 
@@ -140,24 +146,24 @@ def compute_diagrams(original_df: pd.DataFrame, key: str, columns: list[str, str
 def main():
 
     # Read data
-    original_df = pd.read_pickle(get_repo_path() / cfg.data_dir / cfg.prepare_target)
+    original_df = pd.read_pickle(get_repo_path() / data_dir / params.input)
 
     # Encode labels
-    original_df[cfg.label_column] = encode_data(original_df[cfg.label_column])
+    original_df[meta.label_column] = encode_data(original_df[meta.label_column])
 
     # Restrict data
-    original_df = restrict_data(original_df, cfg.restrict)
+    original_df = restrict_data(original_df, params.restrict)
 
     print('Calculating diagrams...')
     diagrams = {}
-    for key, value in cfg.columns.items():
+    for key, value in params.columns.items():
         print(f'Calculating diagrams for {key}')
         print('===============================')
         result_df = compute_diagrams(original_df, key, value)
         diagrams[key] = result_df
 
     # Save results
-    with open(get_repo_path() / cfg.data_dir / cfg.diagrams_target, 'wb') as f:
+    with open(get_repo_path() / data_dir / params.output, 'wb') as f:
         pd.to_pickle(diagrams, f)
 
     # Clean cache

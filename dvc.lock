@@ -87,8 +87,8 @@ stages:
       size: 2414582692
     - path: src/config.py
       hash: md5
-      md5: 1301b6f802268195015d54dc8bdc37c5
-      size: 1956
+      md5: dd33945168aa6243bb7c9466d58b1ada
+      size: 2067
     - path: src/data_transformer.py
       hash: md5
       md5: 2ab4a278083e22554f878a29019a177e
@@ -99,28 +99,66 @@ stages:
       size: 572
     - path: src/diagrams.py
       hash: md5
-      md5: d3081bf050bd1ea7caf7e6e908cb35c7
-      size: 3979
+      md5: 463f7943e71be70c4cc1ed3cbd26b71d
+      size: 4731
     - path: src/utils.py
       hash: md5
-      md5: ac1b61a398091f00e43715ee0075410f
-      size: 381
+      md5: 9ab1831186b26fc602f4b406f4d6cd60
+      size: 1043
+    params:
+      params.yaml:
+        diagrams:
+          output: diagrams.pkl
+          restrict: 2
+          columns:
+            xy:
+            - acc_x
+            - acc_y
+            xz:
+            - acc_x
+            - acc_z
+            yz:
+            - acc_y
+            - acc_z
+          params:
+          - dim: 2
+          - dim: 3
+          - dim: 4
+          - dim: 10
+          - dim: 2
+            kind: abs
+          - dim: 10
+            kind: abs
+          - dim: 2
+            kind: phi
+          - dim: 10
+            kind: phi
+          - dim: 2
+            kind: abs
+            fil: star
+          - dim: 2
+            kind: phi
+            fil: star
+          - dim: 2
+            step: 30
+          - dim: 4
+            step: 30
     outs:
     - path: data/diagrams.pkl
       hash: md5
-      md5: 2d05a85bde24e5cf55cba9943c3c4193
-      size: 2257114845
+      md5: 49cacf089906a41f56660359e73f1262
+      size: 4488338
   featurize:
     cmd: python src/featurize.py
     deps:
     - path: data/diagrams.pkl
       hash: md5
-      md5: 2d05a85bde24e5cf55cba9943c3c4193
-      size: 2257114845
+      md5: 49cacf089906a41f56660359e73f1262
+      size: 4488338
     - path: src/config.py
       hash: md5
-      md5: 1301b6f802268195015d54dc8bdc37c5
-      size: 1956
+      md5: dd33945168aa6243bb7c9466d58b1ada
+      size: 2067
     - path: src/data_transformer.py
       hash: md5
       md5: 2ab4a278083e22554f878a29019a177e
@@ -135,10 +173,14 @@ stages:
       size: 1679
     - path: src/utils.py
       hash: md5
-      md5: ac1b61a398091f00e43715ee0075410f
-      size: 381
+      md5: 9ab1831186b26fc602f4b406f4d6cd60
+      size: 1043
+    params:
+      params.yaml:
+        featurize:
+          output: features.pkl
     outs:
     - path: data/features.pkl
       hash: md5
-      md5: 3ddd0c1969ca5c1269d00b81d7f62555
-      size: 13923945
+      md5: d38ca8be6b0d05a7f3eaf8d7b677263f
+      size: 41516

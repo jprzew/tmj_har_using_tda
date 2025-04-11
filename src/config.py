@@ -1,7 +1,7 @@
 from modurec.features.feature import FeatureData
 
 # Directories
-data_dir = 'data'
+data_dir = 'data' # DONE
 
 # Compose stage
 dataset = 'lab_data'  # DONE
@@ -9,14 +9,14 @@ compose_target = 'data.pkl' # DONE
 
 # Prepare stage
 prepare_target = 'data_prepared.pkl'  # DONE
-window_size = 700
-window_step = 100
-random_seed = 42
-augment_percent = 100
-augment_params = {'sigma': 5}
-augmenter = None
-partial_windows = False
-subsample = False
+window_size = 700   # DONE
+window_step = 100  # DONE
+random_seed = 42  # DONE
+augment_percent = 100  # DONE
+augment_params = {'sigma': 5}  # DONE
+augmenter = None  # DONE
+partial_windows = False  # DONE
+subsample = False  # DONE
 
 # Diagrams stage
 diagrams_target = 'diagrams.pkl'  # DONE
