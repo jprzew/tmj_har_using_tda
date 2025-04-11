@@ -120,9 +120,10 @@ def shuffle_data(training_data: TrainingData) -> TrainingData:
     indices = np.arange(training_data.X.shape[0])
     np.random.shuffle(indices)
 
-    return TrainingData(X = training_data.X[indices],
-                        y = training_data.y[indices],
-                        groups = training_data.groups[indices])
+    return TrainingData(X=training_data.X[indices],
+                        y=training_data.y[indices],
+                        feature_names=training_data.feature_names,
+                        groups=training_data.groups[indices])
 
 
 def main():
@@ -137,7 +138,7 @@ def main():
     results = []
     for cycle in range(CYCLES_TO_RUN):
         print('Cycle:', cycle)
-        results.append(persistent_elimination(training_data, base_estimator=model, groups=cfg.rfe_groups))
+        results.append(persistent_elimination(training_data, base_estimator=model, groups=params.rfe_groups))
 
     # Save results
     with open(get_repo_path() / RESULTS_FILE, 'wb') as f:
