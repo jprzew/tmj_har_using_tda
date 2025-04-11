@@ -6,4 +6,5 @@ defaults:
   - diagrams: default
   - featurize: default
   - metadata: default
+  - rfe_reduce: default
 

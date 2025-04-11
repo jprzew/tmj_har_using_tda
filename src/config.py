@@ -40,7 +40,7 @@ features_target = 'features.pkl'  # DONE
 
 
 # RFE reduce
-rfe_groups = True
+rfe_groups = True  # DONE
 
 # Dataset metadata
 label_column = 'acc_gyro_event'

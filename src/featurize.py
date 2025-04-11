@@ -1,11 +1,32 @@
 """Calculates features out of persistence diagrams"""
 
+from dataclasses import dataclass
 import pandas as pd
+import dvc.api
 import warnings
-from utils import get_repo_path
+from utils import get_repo_path, get_metadata
 import config as cfg
 from feature_list import all_features
 from modurec.features.feature import calculate_feature
+
+
+@dataclass
+class Params:
+    input: str
+    output: str
+
+# Load metadata
+meta = get_metadata()
+
+# Get the DVC parameters
+params = dvc.api.params_show()
+
+# Data dir
+data_dir = params['directories']['data']
+
+# Stage parameters
+params_dict = {**{'input': params['diagrams']['output']}, **params['featurize']}
+params = Params(**params_dict)
 
 
 def compute_features(key: str, diagrams: pd.DataFrame) -> pd.DataFrame:

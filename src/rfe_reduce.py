@@ -3,6 +3,7 @@
 import pickle
 from functools import wraps
 import warnings
+from dataclasses import dataclass
 
 # Third party imports
 from tqdm import tqdm
@@ -11,11 +12,11 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import KFold, GroupKFold
 from sklearn.feature_selection import RFECV
 import pandas as pd
+import dvc.api
 
 # Local imports
 from spotcheck import load_dataset, get_models, make_pipeline, TrainingData
-from utils import get_repo_path
-import config as cfg
+from utils import get_repo_path, get_metadata
 
 # Parameters
 CYCLES_TO_RUN = 1
@@ -30,6 +31,24 @@ MIN_SAMPLES_LEAF = 30
 # Set random seed
 np.random.seed(RANDOM_SEED)
 
+
+@dataclass
+class Params:
+    input: str
+    rfe_groups: bool
+
+# Load metadata
+meta = get_metadata()
+
+# Get the DVC parameters
+params = dvc.api.params_show()
+
+# Data dir
+data_dir = params['directories']['data']
+
+# Stage parameters
+params_dict = {**{'input': params['featurize']['output']}, **params['rfe_reduce']}
+params = Params(**params_dict)
 
 def ignore_user_warning(func):
     @wraps(func)
