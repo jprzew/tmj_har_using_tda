@@ -23,8 +23,7 @@ from matplotlib import pyplot
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import config as cfg
-from utils import get_repo_path
+from utils import get_repo_path, get_metadata
 
 from sklearn import model_selection
 from sklearn.metrics import classification_report
@@ -55,6 +54,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.pipeline import Pipeline
 
 from dataclasses import dataclass
+import dvc.api
 
 @dataclass
 class TrainingData:
@@ -62,6 +62,24 @@ class TrainingData:
     y: np.ndarray
     feature_names: list[str]
     groups: np.ndarray
+
+
+@dataclass
+class Params:
+    input: str
+
+# Load metadata
+meta = get_metadata()
+
+# Get the DVC parameters
+params = dvc.api.params_show()
+
+# Data dir
+data_dir = params['directories']['data']
+
+# Stage parameters
+params_dict = {'input': params['featurize']['output']}
+params = Params(**params_dict)
 
 
 def spot_check_cross_validation(X, y, k_fold=10, test_size=0.10,
@@ -287,12 +305,12 @@ def extract_dataframes(dictionary: dict[str, pd.DataFrame]) -> tuple[pd.DataFram
 # load the dataset, returns X and y elements
 def load_dataset() -> TrainingData:
 
-    results = pd.read_pickle(get_repo_path() / cfg.data_dir / cfg.features_target)
+    results = pd.read_pickle(get_repo_path() / data_dir / params.input)
     invariant_df, filtered_df = extract_dataframes(results)
 
-    y = np.array(invariant_df[cfg.label_column])
+    y = np.array(invariant_df[meta.label_column])
     X = np.array(filtered_df)
-    groups = np.array(invariant_df[cfg.patient_column])
+    groups = np.array(invariant_df[meta.patient_column])
     feature_names = list(filtered_df.columns)
 
     return TrainingData(X, y, feature_names, groups)

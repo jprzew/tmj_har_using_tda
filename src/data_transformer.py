@@ -28,7 +28,6 @@ import pandas as pd
 # import nolds
 
 # Local imports
-import config as cfg
 from utils import get_repo_path
 
 

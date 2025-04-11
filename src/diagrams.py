@@ -1,6 +1,5 @@
 """Calculates persistence diagrams"""
 
-# import config as cfg
 import pandas as pd
 import dvc.api
 from dataclasses import dataclass

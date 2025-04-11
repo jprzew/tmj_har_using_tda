@@ -15,7 +15,6 @@ from dataclasses import dataclass
 import dvc.api
 
 # Local imports
-# import config as cfg
 from utils import get_repo_path, get_metadata
 from data_transformer import df_windower
 

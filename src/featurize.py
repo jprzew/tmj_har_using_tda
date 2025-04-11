@@ -5,7 +5,6 @@ import pandas as pd
 import dvc.api
 import warnings
 from utils import get_repo_path, get_metadata
-import config as cfg
 from feature_list import all_features
 from modurec.features.feature import calculate_feature
 
@@ -42,10 +41,10 @@ def compute_features(key: str, diagrams: pd.DataFrame) -> pd.DataFrame:
 
     # Create results df with label column
     results_df = pd.concat(results, axis=1)
-    results_df = results_df.join(diagrams[cfg.label_column])
+    results_df = results_df.join(diagrams[meta.label_column])
 
     # Add patient column to the results_df
-    results_df = results_df.join(diagrams[cfg.patient_column])
+    results_df = results_df.join(diagrams[meta.patient_column])
 
     return results_df
 
@@ -53,7 +52,7 @@ def compute_features(key: str, diagrams: pd.DataFrame) -> pd.DataFrame:
 def main():
 
     # Reading the diagrams
-    diagrams = pd.read_pickle(get_repo_path() / cfg.data_dir / cfg.diagrams_target)
+    diagrams = pd.read_pickle(get_repo_path() / data_dir / params.input)
 
     # Calculate features
     print('Calculating features...')
@@ -65,7 +64,7 @@ def main():
         results[key] = compute_features(key, value)
 
     # Save to file
-    with open(get_repo_path() / cfg.data_dir / cfg.features_target, 'wb') as f:
+    with open(get_repo_path() / data_dir / params.output, 'wb') as f:
         pd.to_pickle(results, f)
 
 

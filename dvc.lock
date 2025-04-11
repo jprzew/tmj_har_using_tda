@@ -13,12 +13,12 @@ stages:
       size: 2075
     - path: src/data_transformer.py
       hash: md5
-      md5: 2ab4a278083e22554f878a29019a177e
-      size: 23977
+      md5: 5e0d2c76aec3be8a435cc665206c123a
+      size: 23956
     - path: src/datasets.py
       hash: md5
-      md5: 84c909f0587bf5e4460c393d699c4d9d
-      size: 572
+      md5: 591e8df16f7bc813dabbf76f5f40eb66
+      size: 606
     - path: src/utils.py
       hash: md5
       md5: 9ab1831186b26fc602f4b406f4d6cd60
@@ -46,16 +46,16 @@ stages:
       size: 2075
     - path: src/data_transformer.py
       hash: md5
-      md5: 2ab4a278083e22554f878a29019a177e
-      size: 23977
+      md5: 5e0d2c76aec3be8a435cc665206c123a
+      size: 23956
     - path: src/datasets.py
       hash: md5
-      md5: 84c909f0587bf5e4460c393d699c4d9d
-      size: 572
+      md5: 591e8df16f7bc813dabbf76f5f40eb66
+      size: 606
     - path: src/prepare.py
       hash: md5
-      md5: 5777e2403b21a64efc2106086b1ef1e2
-      size: 6506
+      md5: a5aa152a2fd1b8c7f2d12e06681afeb4
+      size: 6483
     - path: src/utils.py
       hash: md5
       md5: 9ab1831186b26fc602f4b406f4d6cd60
@@ -161,16 +161,16 @@ stages:
       size: 2075
     - path: src/data_transformer.py
       hash: md5
-      md5: 2ab4a278083e22554f878a29019a177e
-      size: 23977
+      md5: 5e0d2c76aec3be8a435cc665206c123a
+      size: 23956
     - path: src/datasets.py
       hash: md5
-      md5: 84c909f0587bf5e4460c393d699c4d9d
-      size: 572
+      md5: 591e8df16f7bc813dabbf76f5f40eb66
+      size: 606
     - path: src/featurize.py
       hash: md5
-      md5: 3c3898892b3d38e559500e68822a466b
-      size: 2081
+      md5: eda02bc123ed3adc3403bb3e69714a25
+      size: 2041
     - path: src/utils.py
       hash: md5
       md5: 9ab1831186b26fc602f4b406f4d6cd60
@@ -184,3 +184,39 @@ stages:
       hash: md5
       md5: d38ca8be6b0d05a7f3eaf8d7b677263f
       size: 41516
+  rfe_reduce:
+    cmd: python src/rfe_reduce.py
+    deps:
+    - path: data/features.pkl
+      hash: md5
+      md5: d38ca8be6b0d05a7f3eaf8d7b677263f
+      size: 41516
+    - path: src/config.py
+      hash: md5
+      md5: 7235132b360eb345b9eb9f55679c622d
+      size: 2075
+    - path: src/data_transformer.py
+      hash: md5
+      md5: 5e0d2c76aec3be8a435cc665206c123a
+      size: 23956
+    - path: src/datasets.py
+      hash: md5
+      md5: 591e8df16f7bc813dabbf76f5f40eb66
+      size: 606
+    - path: src/rfe_reduce.py
+      hash: md5
+      md5: 483be50f86c14b6be40115ff6ffb41ec
+      size: 3860
+    - path: src/spotcheck.py
+      hash: md5
+      md5: b2002342276a0c406406556c9a7ea95e
+      size: 11299
+    - path: src/utils.py
+      hash: md5
+      md5: 9ab1831186b26fc602f4b406f4d6cd60
+      size: 1043
+    outs:
+    - path: metrics/rfe_results.pkl
+      hash: md5
+      md5: 7818e9e54910b0e58917d128ab67db71
+      size: 396895
