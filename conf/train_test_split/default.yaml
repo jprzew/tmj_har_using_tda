@@ -1,0 +1,4 @@
+training_output: train_features.pkl
+test_output: test_features.pkl
+test_proportion: 0.2
+

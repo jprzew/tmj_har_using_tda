@@ -3,7 +3,6 @@ stages:
     cmd: python src/compose.py
     deps:
     - src/compose.py
-    - src/config.py
     - src/data_transformer.py
     - src/utils.py
     - src/datasets.py
@@ -16,10 +15,8 @@ stages:
     deps:
     - data/${compose.output}
     - src/prepare.py
-    - src/config.py
     - src/data_transformer.py
     - src/utils.py
-    - src/datasets.py
     params:
       - prepare
     outs:
@@ -29,35 +26,41 @@ stages:
     deps:
     - data/${prepare.output}
     - src/diagrams.py
-    - src/config.py
     - src/data_transformer.py
     - src/utils.py
-    - src/datasets.py
     params:
       - diagrams
     outs:
     - data/${diagrams.output}
-    frozen: true
+    # frozen: true
   featurize:
     cmd: python src/featurize.py
     deps:
       - data/${diagrams.output}
       - src/featurize.py
-      - src/config.py
       - src/data_transformer.py
       - src/utils.py
-      - src/datasets.py
     params:
       - featurize
     outs:
       - data/${featurize.output}
+  train_test_split:
+    cmd: python src/train_test_split.py
+    deps:
+      - data/${featurize.output}
+      - src/train_test_split.py
+      - src/utils.py
+    params:
+      - train_test_split
+    outs:
+      - data/${train_test_split.training_output}
+      - data/${train_test_split.test_output}
   rfe_reduce:
     cmd: python src/rfe_reduce.py
     deps:
       - data/${featurize.output}
       - src/spotcheck.py
       - src/rfe_reduce.py
-      - src/config.py
       - src/data_transformer.py
       - src/utils.py
       - src/datasets.py

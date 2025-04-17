@@ -50,6 +50,10 @@ diagrams:
     step: 30
 featurize:
   output: features.pkl
+train_test_split:
+  training_output: train_features.pkl
+  test_output: test_features.pkl
+  test_proportion: 0.2
 metadata:
   label_column: acc_gyro_event
   timestamp_column: acc_gyro_timestamp

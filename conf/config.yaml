@@ -5,6 +5,7 @@ defaults:
   - prepare: default
   - diagrams: default
   - featurize: default
+  - train_test_split: default
   - metadata: default
   - rfe_reduce: default
 

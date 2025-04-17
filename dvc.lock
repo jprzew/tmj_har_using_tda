@@ -7,10 +7,6 @@ stages:
       hash: md5
       md5: 734de3875c6f0a8e4f36d1d039730544
       size: 699
-    - path: src/config.py
-      hash: md5
-      md5: 7235132b360eb345b9eb9f55679c622d
-      size: 2075
     - path: src/data_transformer.py
       hash: md5
       md5: 5e0d2c76aec3be8a435cc665206c123a
@@ -85,22 +81,18 @@ stages:
       hash: md5
       md5: 457e30030e42049eb2800d6ac406b947
       size: 2414582692
-    - path: src/config.py
-      hash: md5
-      md5: 7235132b360eb345b9eb9f55679c622d
-      size: 2075
     - path: src/data_transformer.py
       hash: md5
-      md5: 2ab4a278083e22554f878a29019a177e
-      size: 23977
+      md5: 5e0d2c76aec3be8a435cc665206c123a
+      size: 23956
     - path: src/datasets.py
       hash: md5
-      md5: 84c909f0587bf5e4460c393d699c4d9d
-      size: 572
+      md5: 591e8df16f7bc813dabbf76f5f40eb66
+      size: 606
     - path: src/diagrams.py
       hash: md5
-      md5: 463f7943e71be70c4cc1ed3cbd26b71d
-      size: 4731
+      md5: e8c67287953c4fbe2586c1c8d70dfe34
+      size: 4708
     - path: src/utils.py
       hash: md5
       md5: 9ab1831186b26fc602f4b406f4d6cd60
@@ -155,10 +147,6 @@ stages:
       hash: md5
       md5: 49cacf089906a41f56660359e73f1262
       size: 4488338
-    - path: src/config.py
-      hash: md5
-      md5: 7235132b360eb345b9eb9f55679c622d
-      size: 2075
     - path: src/data_transformer.py
       hash: md5
       md5: 5e0d2c76aec3be8a435cc665206c123a
@@ -169,8 +157,8 @@ stages:
       size: 606
     - path: src/featurize.py
       hash: md5
-      md5: eda02bc123ed3adc3403bb3e69714a25
-      size: 2041
+      md5: 106d03f4ee9af7319c218b25a32ea092
+      size: 3938
     - path: src/utils.py
       hash: md5
       md5: 9ab1831186b26fc602f4b406f4d6cd60
@@ -182,8 +170,8 @@ stages:
     outs:
     - path: data/features.pkl
       hash: md5
-      md5: d38ca8be6b0d05a7f3eaf8d7b677263f
-      size: 41516
+      md5: bb624e88902736020b5d3e1907816885
+      size: 41609
   rfe_reduce:
     cmd: python src/rfe_reduce.py
     deps:
@@ -220,3 +208,33 @@ stages:
       hash: md5
       md5: 7818e9e54910b0e58917d128ab67db71
       size: 396895
+  train_test_split:
+    cmd: python src/train_test_split.py
+    deps:
+    - path: data/features.pkl
+      hash: md5
+      md5: bb624e88902736020b5d3e1907816885
+      size: 41609
+    - path: src/train_test_split.py
+      hash: md5
+      md5: 5d14c1d130e8c323a9f37ac9b1127dd3
+      size: 1896
+    - path: src/utils.py
+      hash: md5
+      md5: 9ab1831186b26fc602f4b406f4d6cd60
+      size: 1043
+    params:
+      params.yaml:
+        train_test_split:
+          training_output: train_features.pkl
+          test_output: test_features.pkl
+          test_proportion: 0.2
+    outs:
+    - path: data/test_features.pkl
+      hash: md5
+      md5: 6d2b31795e1cc241ab3f703aaa91e6e8
+      size: 19693
+    - path: data/train_features.pkl
+      hash: md5
+      md5: 3507006538cb925fedb3a63d2eab2366
+      size: 36133
