@@ -1,5 +1,5 @@
 # TODO: This code is not up to date. The data structure has changed.
-# Moreover I moved get_models to models.py
+# Moreover I moved get_models to ml_utils.py
 """
 If you use my code or material in your own project, please reference the source, including:
 

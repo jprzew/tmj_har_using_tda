@@ -1,3 +1,9 @@
+# Standard library imports
+from dataclasses import dataclass
+
+
+# Third party imports
+# Sklearn
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import RidgeClassifier
 from sklearn.linear_model import SGDClassifier
@@ -13,6 +19,12 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
+import pandas as pd
+import numpy as np
+
 
 def _params_or_default(params: dict, default: dict) -> dict:
     """Returns params if params is not none, otherwise returns default."""
@@ -58,3 +70,42 @@ def get_model(model_name: str, params=None):
             return GradientBoostingClassifier(**_params_or_default(params, {'n_estimators': 100}))
         case _:
             raise ValueError(f"Unknown model: {model_name}")
+
+
+@dataclass
+class TrainingData:
+    X: np.ndarray
+    y: np.ndarray
+    feature_names: list[str]
+    groups: np.ndarray
+
+
+# load the dataset, returns X and y elements
+def prepare_dataset(df: pd.DataFrame, non_feature_cols: list[str], target_col: str, group_col: str) -> TrainingData:
+
+    # Target
+    y = np.array(df[target_col])
+
+    # Features
+    features_df = df.drop(columns=non_feature_cols + [target_col, group_col])
+    X = np.array(features_df)
+
+    # Groups & feature names
+    groups = np.array(df[group_col])
+    feature_names = list(features_df.columns)
+
+    return TrainingData(X, y, feature_names, groups)
+
+
+# create a feature preparation pipeline for a model
+def make_pipeline(model):
+    steps = list()
+    # standardization
+    steps.append(('standardize', StandardScaler()))
+    # normalization
+    steps.append(('normalize', MinMaxScaler()))
+    # the model
+    steps.append(('model', model))
+    # create a pipeline
+    pipeline = Pipeline(steps=steps)
+    return pipeline
