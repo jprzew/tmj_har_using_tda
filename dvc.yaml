@@ -8,6 +8,7 @@ stages:
     - src/datasets.py
     params:
       - compose
+      - metadata
     outs:
     - data/${compose.output}
   prepare:
@@ -19,6 +20,7 @@ stages:
     - src/utils.py
     params:
       - prepare
+      - metadata
     outs:
     - data/${prepare.output}
   diagrams:
@@ -30,6 +32,7 @@ stages:
     - src/utils.py
     params:
       - diagrams
+      - metadata
     outs:
     - data/${diagrams.output}
     # frozen: true
@@ -42,6 +45,7 @@ stages:
       - src/utils.py
     params:
       - featurize
+      - metadata
     outs:
       - data/${featurize.output}
   train_test_split:
@@ -52,17 +56,17 @@ stages:
       - src/utils.py
     params:
       - train_test_split
+      - metadata
     outs:
       - data/${train_test_split.training_output}
       - data/${train_test_split.test_output}
   rfe_reduce:
     cmd: python src/rfe_reduce.py
     deps:
-      - data/${featurize.output}
-      - src/spotcheck.py
+      - data/${train_test_split.training_output}
+      - src/ml_utils.py
       - src/rfe_reduce.py
-      - src/data_transformer.py
       - src/utils.py
-      - src/datasets.py
     outs:
-      - metrics/rfe_results.pkl
+      - data/${rfe_reduce.output}
+      - data/${rfe_reduce.rfecv_output}
