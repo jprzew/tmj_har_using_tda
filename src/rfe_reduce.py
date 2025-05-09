@@ -15,7 +15,8 @@ import pandas as pd
 import dvc.api
 
 # Local imports
-from spotcheck import load_dataset, get_models, make_pipeline, TrainingData
+from ml_utils import prepare_dataset, get_model, make_pipeline, TrainingData
+
 from utils import get_repo_path, get_metadata
 
 # Parameters
@@ -126,23 +127,53 @@ def shuffle_data(training_data: TrainingData) -> TrainingData:
                         groups=training_data.groups[indices])
 
 
+# TODO: This function will be used to prepare the output ranking
+
+# def get_protein_sequence(cycle, feature_names):
+#     fn = feature_names
+#     selected = []
+#     for estimator in cycle:
+#         fn = estimator.get_feature_names_out(fn)
+#         selected.append(fn)
+#
+#     return selected
+
+#
+# # %%
+# get_protein_sequence(results[0])
+#
+# # %% [markdown]
+# # ## Create results_df
+#
+# # %%
+# f = lambda x: pd.Series(np.concatenate(get_protein_sequence(x))).value_counts()
+#
+# results_df = pd.concat(map(f, results), axis=1)
+
+
+# TODO: Read params + metadata, load dataset & finish this script
+
 def main():
+
+    # Read input data
 
     training_data = load_dataset()
 
     training_data = shuffle_data(training_data)
 
 
-    model = make_pipeline(get_models()['rf'])
+    model = make_pipeline(get_model(['rf']))  # TODO: Parametrize this
 
     results = []
     for cycle in range(CYCLES_TO_RUN):
         print('Cycle:', cycle)
         results.append(persistent_elimination(training_data, base_estimator=model, groups=params.rfe_groups))
 
-    # Save results
+    # Save RFECV results
     with open(get_repo_path() / RESULTS_FILE, 'wb') as f:
         pickle.dump(results, f)
+
+
 
 
 if __name__ == '__main__':
