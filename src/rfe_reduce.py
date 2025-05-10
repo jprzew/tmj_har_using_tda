@@ -16,27 +16,18 @@ import dvc.api
 
 # Local imports
 from ml_utils import prepare_dataset, get_model, make_pipeline, TrainingData
-
 from utils import get_repo_path, get_metadata
 
 # Parameters
-CYCLES_TO_RUN = 1
-RANDOM_SEED = 0  # previous 42
-RESULTS_FILE = 'metrics/rfe_results.pkl'
-
-# Hyperparameters
-N_ESTIMATORS = 100
-MAX_DEPTH = 3
-MIN_SAMPLES_LEAF = 30
-
-# Set random seed
-np.random.seed(RANDOM_SEED)
-
 
 @dataclass
 class Params:
     input: str
+    output: str
+    rfecv_output: str
+    cycles_to_run: int
     rfe_groups: bool
+    random_seed: int
 
 # Load metadata
 meta = get_metadata()
@@ -50,6 +41,12 @@ data_dir = params['directories']['data']
 # Stage parameters
 params_dict = {**{'input': params['featurize']['output']}, **params['rfe_reduce']}
 params = Params(**params_dict)
+
+
+# Set random seed
+np.random.seed(params.random_seed)
+
+
 
 def ignore_user_warning(func):
     @wraps(func)
@@ -127,45 +124,48 @@ def shuffle_data(training_data: TrainingData) -> TrainingData:
                         groups=training_data.groups[indices])
 
 
-# TODO: This function will be used to prepare the output ranking
+def get_feature_sequence(cycle, feature_names: list[str]) -> list[list[str]]:
+    """Extracts feature lists from the estimators resulting from the RFECV cycle."""
+    fn = feature_names
+    selected = []
+    for estimator in cycle:
+        fn = estimator.get_feature_names_out(fn)
+        selected.append(fn)
 
-# def get_protein_sequence(cycle, feature_names):
-#     fn = feature_names
-#     selected = []
-#     for estimator in cycle:
-#         fn = estimator.get_feature_names_out(fn)
-#         selected.append(fn)
-#
-#     return selected
+    return selected
 
-#
-# # %%
-# get_protein_sequence(results[0])
-#
-# # %% [markdown]
-# # ## Create results_df
-#
-# # %%
-# f = lambda x: pd.Series(np.concatenate(get_protein_sequence(x))).value_counts()
-#
-# results_df = pd.concat(map(f, results), axis=1)
+
+def compute_feature_ranking(results, feature_names: list[str]) -> pd.DataFrame:
+
+    def _compute_feature_counts(x):
+        return pd.Series(np.concatenate(get_feature_sequence(x, feature_names))).value_counts()
+
+    return pd.concat(map(_compute_feature_counts, results), axis=1)
 
 
 # TODO: Read params + metadata, load dataset & finish this script
 
 def main():
 
-    # Read input data
+    # Read the input file
+    df = pd.read_pickle(get_repo_path() / data_dir / params.input)
 
-    training_data = load_dataset()
+
+
+
+    training_data = prepare_dataset(df,
+                                    non_feature_cols=meta['scalar_columns'],
+                                    target_col=meta['label_column'],
+                                    group_col=meta['patient_column'])
+
 
     training_data = shuffle_data(training_data)
 
 
-    model = make_pipeline(get_model(['rf']))  # TODO: Parametrize this
+    model = make_pipeline(get_model('rf'))  # TODO: Parametrize this
 
     results = []
-    for cycle in range(CYCLES_TO_RUN):
+    for cycle in range(params.cycles_to_run):
         print('Cycle:', cycle)
         results.append(persistent_elimination(training_data, base_estimator=model, groups=params.rfe_groups))
 

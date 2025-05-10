@@ -1,1 +1,6 @@
-rfe_groups: True
+input: train_features.pkl
+output: features_rank.pkl
+rfecv_output: rfecv_results.pkl
+cycles_to_run: 1
+rfe_groups: False
+random_seed: 0

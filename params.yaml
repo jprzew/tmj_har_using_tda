@@ -82,6 +82,11 @@ metadata:
   measure_column: measure_id
   augment_column: augmented
 rfe_reduce:
-  rfe_groups: true
+  input: train_features.pkl
+  output: features_rank.pkl
+  rfecv_output: rfecv_results.pkl
+  cycles_to_run: 1
+  rfe_groups: false
+  random_seed: 0
 directories:
   data: data
