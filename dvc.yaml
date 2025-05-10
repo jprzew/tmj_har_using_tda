@@ -60,13 +60,13 @@ stages:
     outs:
       - data/${train_test_split.training_output}
       - data/${train_test_split.test_output}
-  rfe_reduce:
-    cmd: python src/rfe_reduce.py
-    deps:
-      - data/${train_test_split.training_output}
-      - src/ml_utils.py
-      - src/rfe_reduce.py
-      - src/utils.py
-    outs:
-      - data/${rfe_reduce.output}
-      - data/${rfe_reduce.rfecv_output}
+#  rfe_reduce:
+#    cmd: python src/rfe_reduce.py
+#    deps:
+#      - data/${train_test_split.training_output}
+#      - src/ml_utils.py
+#      - src/rfe_reduce.py
+#      - src/utils.py
+#    outs:
+#      - data/${rfe_reduce.output}
+#      - data/${rfe_reduce.rfecv_output}

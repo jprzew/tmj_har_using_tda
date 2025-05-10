@@ -24,6 +24,33 @@ stages:
         compose:
           dataset: lab_data
           output: data.pkl
+        metadata:
+          label_column: acc_gyro_event
+          timestamp_column: acc_gyro_timestamp
+          correct_labels:
+          - 0
+          - 1
+          - 2
+          - 4
+          - 8
+          timestamp_multiplier: 0.0001
+          signal_columns:
+            acc:
+            - acc_x
+            - acc_y
+            - acc_z
+            gyro:
+            - gyro_x
+            - gyro_y
+            - gyro_z
+          scalar_columns:
+          - patient_id
+          - measure_id
+          - augmented
+          datetime_column: packet_start_time
+          patient_column: patient_id
+          measure_column: measure_id
+          augment_column: augmented
     outs:
     - path: data/data.pkl
       hash: md5
@@ -36,18 +63,10 @@ stages:
       hash: md5
       md5: 2984ed34c838b39c92bb0653cd21d549
       size: 429301096
-    - path: src/config.py
-      hash: md5
-      md5: 7235132b360eb345b9eb9f55679c622d
-      size: 2075
     - path: src/data_transformer.py
       hash: md5
       md5: 5e0d2c76aec3be8a435cc665206c123a
       size: 23956
-    - path: src/datasets.py
-      hash: md5
-      md5: 591e8df16f7bc813dabbf76f5f40eb66
-      size: 606
     - path: src/prepare.py
       hash: md5
       md5: a5aa152a2fd1b8c7f2d12e06681afeb4
@@ -58,6 +77,33 @@ stages:
       size: 1043
     params:
       params.yaml:
+        metadata:
+          label_column: acc_gyro_event
+          timestamp_column: acc_gyro_timestamp
+          correct_labels:
+          - 0
+          - 1
+          - 2
+          - 4
+          - 8
+          timestamp_multiplier: 0.0001
+          signal_columns:
+            acc:
+            - acc_x
+            - acc_y
+            - acc_z
+            gyro:
+            - gyro_x
+            - gyro_y
+            - gyro_z
+          scalar_columns:
+          - patient_id
+          - measure_id
+          - augmented
+          datetime_column: packet_start_time
+          patient_column: patient_id
+          measure_column: measure_id
+          augment_column: augmented
         prepare:
           output: data_prepared.pkl
           window_size: 700
@@ -85,10 +131,6 @@ stages:
       hash: md5
       md5: 5e0d2c76aec3be8a435cc665206c123a
       size: 23956
-    - path: src/datasets.py
-      hash: md5
-      md5: 591e8df16f7bc813dabbf76f5f40eb66
-      size: 606
     - path: src/diagrams.py
       hash: md5
       md5: e8c67287953c4fbe2586c1c8d70dfe34
@@ -101,7 +143,7 @@ stages:
       params.yaml:
         diagrams:
           output: diagrams.pkl
-          restrict: 2
+          restrict: 500
           columns:
             xy:
             - acc_x
@@ -135,26 +177,49 @@ stages:
             step: 30
           - dim: 4
             step: 30
+        metadata:
+          label_column: acc_gyro_event
+          timestamp_column: acc_gyro_timestamp
+          correct_labels:
+          - 0
+          - 1
+          - 2
+          - 4
+          - 8
+          timestamp_multiplier: 0.0001
+          signal_columns:
+            acc:
+            - acc_x
+            - acc_y
+            - acc_z
+            gyro:
+            - gyro_x
+            - gyro_y
+            - gyro_z
+          scalar_columns:
+          - patient_id
+          - measure_id
+          - augmented
+          datetime_column: packet_start_time
+          patient_column: patient_id
+          measure_column: measure_id
+          augment_column: augmented
     outs:
     - path: data/diagrams.pkl
       hash: md5
-      md5: 49cacf089906a41f56660359e73f1262
-      size: 4488338
+      md5: 6c0300e025fb8ed4587b60fe12bd8604
+      size: 1127495516
   featurize:
     cmd: python src/featurize.py
     deps:
     - path: data/diagrams.pkl
       hash: md5
-      md5: 49cacf089906a41f56660359e73f1262
-      size: 4488338
+      md5: 6c0300e025fb8ed4587b60fe12bd8604
+      size: 1127495516
     - path: src/data_transformer.py
       hash: md5
       md5: 5e0d2c76aec3be8a435cc665206c123a
       size: 23956
-    - path: src/datasets.py
-      hash: md5
-      md5: 591e8df16f7bc813dabbf76f5f40eb66
-      size: 606
     - path: src/featurize.py
       hash: md5
       md5: 106d03f4ee9af7319c218b25a32ea092
@@ -167,11 +232,38 @@ stages:
       params.yaml:
         featurize:
           output: features.pkl
+        metadata:
+          label_column: acc_gyro_event
+          timestamp_column: acc_gyro_timestamp
+          correct_labels:
+          - 0
+          - 1
+          - 2
+          - 4
+          - 8
+          timestamp_multiplier: 0.0001
+          signal_columns:
+            acc:
+            - acc_x
+            - acc_y
+            - acc_z
+            gyro:
+            - gyro_x
+            - gyro_y
+            - gyro_z
+          scalar_columns:
+          - patient_id
+          - measure_id
+          - augmented
+          datetime_column: packet_start_time
+          patient_column: patient_id
+          measure_column: measure_id
+          augment_column: augmented
     outs:
     - path: data/features.pkl
       hash: md5
-      md5: bb624e88902736020b5d3e1907816885
-      size: 41609
+      md5: c762faaa9e1359c8846d9c6b1177e5c5
+      size: 6859276
   rfe_reduce:
     cmd: python src/rfe_reduce.py
     deps:
@@ -213,8 +305,8 @@ stages:
     deps:
     - path: data/features.pkl
       hash: md5
-      md5: bb624e88902736020b5d3e1907816885
-      size: 41609
+      md5: c762faaa9e1359c8846d9c6b1177e5c5
+      size: 6859276
     - path: src/train_test_split.py
       hash: md5
       md5: 5d14c1d130e8c323a9f37ac9b1127dd3
@@ -225,6 +317,33 @@ stages:
       size: 1043
     params:
       params.yaml:
+        metadata:
+          label_column: acc_gyro_event
+          timestamp_column: acc_gyro_timestamp
+          correct_labels:
+          - 0
+          - 1
+          - 2
+          - 4
+          - 8
+          timestamp_multiplier: 0.0001
+          signal_columns:
+            acc:
+            - acc_x
+            - acc_y
+            - acc_z
+            gyro:
+            - gyro_x
+            - gyro_y
+            - gyro_z
+          scalar_columns:
+          - patient_id
+          - measure_id
+          - augmented
+          datetime_column: packet_start_time
+          patient_column: patient_id
+          measure_column: measure_id
+          augment_column: augmented
         train_test_split:
           training_output: train_features.pkl
           test_output: test_features.pkl
@@ -232,9 +351,9 @@ stages:
     outs:
     - path: data/test_features.pkl
       hash: md5
-      md5: 6d2b31795e1cc241ab3f703aaa91e6e8
-      size: 19693
+      md5: 6c3dfc4fba55e7cd10f0974396865a4e
+      size: 1383272
     - path: data/train_features.pkl
       hash: md5
-      md5: 3507006538cb925fedb3a63d2eab2366
-      size: 36133
+      md5: 6c000ce90fd8e1eadf84b3b47b2f3602
+      size: 5490274

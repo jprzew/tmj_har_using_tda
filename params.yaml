@@ -14,7 +14,7 @@ prepare:
   subsample: false
 diagrams:
   output: diagrams.pkl
-  restrict: 2
+  restrict: 500
   columns:
     xy:
     - acc_x
