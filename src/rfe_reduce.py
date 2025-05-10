@@ -135,12 +135,13 @@ def get_feature_sequence(cycle, feature_names: list[str]) -> list[list[str]]:
     return selected
 
 
-def compute_feature_ranking(results, feature_names: list[str]) -> pd.DataFrame:
+def compute_feature_ranking(results, feature_names: list[str]) -> pd.Series:
 
     def _compute_feature_counts(x):
         return pd.Series(np.concatenate(get_feature_sequence(x, feature_names))).value_counts()
 
-    return pd.concat(map(_compute_feature_counts, results), axis=1)
+    results_df = pd.concat(map(_compute_feature_counts, results), axis=1)
+    return results_df.fillna(0).apply(sum, axis=1).sort_values(ascending=False)
 
 
 # TODO: Read params + metadata, load dataset & finish this script
