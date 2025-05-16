@@ -111,7 +111,6 @@ p = 2
 wasser_features = [FeatureData('wasser_ampl', dict(n=0, p=p, dim=2)),
                    FeatureData('wasser_ampl', dict(n=1, p=p, dim=2)),
                    FeatureData('wasser_ampl', dict(n=1, p=p, dim=3)),
-                   FeatureData('wasser_ampl', dict(n=1, p=p, dim=3)),
                    FeatureData('wasser_ampl', dict(n=0, p=p, dim=4)),
                    FeatureData('wasser_ampl', dict(n=1, p=p, dim=4)),
                    FeatureData('wasser_ampl', dict(n=0, p=p, dim=10)),

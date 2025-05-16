@@ -114,13 +114,19 @@ def get_feature_sequence(cycle, feature_names: list[str]) -> list[list[str]]:
     return selected
 
 
-def compute_feature_ranking(results, feature_names: list[str]) -> pd.Series:
+def compute_feature_ranking(results: list, feature_names: list[str]) -> pd.Series:
 
     def _compute_feature_counts(x):
         return pd.Series(np.concatenate(get_feature_sequence(x, feature_names))).value_counts()
 
-    results_df = pd.concat(map(_compute_feature_counts, results), axis=1)
-    return results_df.fillna(0).apply(sum, axis=1).sort_values(ascending=False)
+    def _fill_missing_features(rank: pd.Series, feature_names: list[str]) -> pd.Series:
+        all_features = pd.Series(index=pd.Index(feature_names)).fillna(0)
+        return (rank + all_features).sort_values(ascending=False).fillna(0).astype(int)
+
+    results_series = pd.concat(map(_compute_feature_counts, results), axis=1)
+    results_series = results_series.fillna(0).apply(sum, axis=1).sort_values(ascending=False)
+
+    return _fill_missing_features(results_series, feature_names)
 
 
 def main():

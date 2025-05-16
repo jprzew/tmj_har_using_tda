@@ -41,6 +41,7 @@ stages:
     deps:
       - data/${diagrams.output}
       - src/featurize.py
+      - src/feature_list.py
       - src/data_transformer.py
       - src/utils.py
     params:
@@ -48,7 +49,6 @@ stages:
       - metadata
     outs:
       - data/${featurize.output}
-    frozen: true
   train_test_split:
     cmd: python src/train_test_split.py
     deps:

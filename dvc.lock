@@ -220,6 +220,10 @@ stages:
       hash: md5
       md5: 5e0d2c76aec3be8a435cc665206c123a
       size: 23956
+    - path: src/feature_list.py
+      hash: md5
+      md5: 605fdd9ad0fe55d69207ec5ea6a29048
+      size: 8815
     - path: src/featurize.py
       hash: md5
       md5: 106d03f4ee9af7319c218b25a32ea092
@@ -262,51 +266,80 @@ stages:
     outs:
     - path: data/features.pkl
       hash: md5
-      md5: c762faaa9e1359c8846d9c6b1177e5c5
-      size: 6859276
+      md5: 770e6ac03abc8b27555137d13db3208c
+      size: 6799150
   rfe_reduce:
     cmd: python src/rfe_reduce.py
     deps:
-    - path: data/features.pkl
+    - path: data/train_features.pkl
       hash: md5
-      md5: d38ca8be6b0d05a7f3eaf8d7b677263f
-      size: 41516
-    - path: src/config.py
+      md5: 4a5aabff2a3276454a6d05be013ca50c
+      size: 5442148
+    - path: src/ml_utils.py
       hash: md5
-      md5: 7235132b360eb345b9eb9f55679c622d
-      size: 2075
-    - path: src/data_transformer.py
-      hash: md5
-      md5: 5e0d2c76aec3be8a435cc665206c123a
-      size: 23956
-    - path: src/datasets.py
-      hash: md5
-      md5: 591e8df16f7bc813dabbf76f5f40eb66
-      size: 606
+      md5: b30611129895c10c3dc3498834697abd
+      size: 4281
     - path: src/rfe_reduce.py
       hash: md5
-      md5: 483be50f86c14b6be40115ff6ffb41ec
-      size: 3860
-    - path: src/spotcheck.py
-      hash: md5
-      md5: b2002342276a0c406406556c9a7ea95e
-      size: 11299
+      md5: 2caa9dfc5911ce9ba2eb4c4fd3afda60
+      size: 4650
     - path: src/utils.py
       hash: md5
       md5: 9ab1831186b26fc602f4b406f4d6cd60
       size: 1043
+    params:
+      params.yaml:
+        metadata:
+          label_column: acc_gyro_event
+          timestamp_column: acc_gyro_timestamp
+          correct_labels:
+          - 0
+          - 1
+          - 2
+          - 4
+          - 8
+          timestamp_multiplier: 0.0001
+          signal_columns:
+            acc:
+            - acc_x
+            - acc_y
+            - acc_z
+            gyro:
+            - gyro_x
+            - gyro_y
+            - gyro_z
+          scalar_columns:
+          - patient_id
+          - measure_id
+          - augmented
+          datetime_column: packet_start_time
+          patient_column: patient_id
+          measure_column: measure_id
+          augment_column: augmented
+        rfe_reduce:
+          input: train_features.pkl
+          output: features_rank.pkl
+          rfecv_output: rfecv_results.pkl
+          cycles_to_run: 1
+          rfe_groups: false
+          random_seed: 0
+          restrict: 200
     outs:
-    - path: metrics/rfe_results.pkl
+    - path: data/features_rank.pkl
       hash: md5
-      md5: 7818e9e54910b0e58917d128ab67db71
-      size: 396895
+      md5: aab3cae24309bf213da7fa64129d2d25
+      size: 2987
+    - path: data/rfecv_results.pkl
+      hash: md5
+      md5: 5b5178901fb539b1d0eef90535f2bed0
+      size: 25691106
   train_test_split:
     cmd: python src/train_test_split.py
     deps:
     - path: data/features.pkl
       hash: md5
-      md5: c762faaa9e1359c8846d9c6b1177e5c5
-      size: 6859276
+      md5: 770e6ac03abc8b27555137d13db3208c
+      size: 6799150
     - path: src/train_test_split.py
       hash: md5
       md5: 5d14c1d130e8c323a9f37ac9b1127dd3
@@ -351,9 +384,9 @@ stages:
     outs:
     - path: data/test_features.pkl
       hash: md5
-      md5: 6c3dfc4fba55e7cd10f0974396865a4e
-      size: 1383272
+      md5: 710b8012825071f32915a8927810c991
+      size: 1371146
     - path: data/train_features.pkl
       hash: md5
-      md5: 6c000ce90fd8e1eadf84b3b47b2f3602
-      size: 5490274
+      md5: 4a5aabff2a3276454a6d05be013ca50c
+      size: 5442148
