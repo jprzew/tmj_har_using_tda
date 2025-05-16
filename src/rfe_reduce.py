@@ -130,7 +130,7 @@ def main():
 
     # Sample df for testing purposes
     if params.restrict:
-        df = df.sample(frac=params.restrict, random_state=params.random_seed)
+        df = df.sample(n=params.restrict, random_state=params.random_seed)
 
     training_data = prepare_dataset(df,
                                     non_feature_cols=meta.scalar_columns,

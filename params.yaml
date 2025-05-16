@@ -88,5 +88,6 @@ rfe_reduce:
   cycles_to_run: 1
   rfe_groups: false
   random_seed: 0
+  restrict: 200
 directories:
   data: data
