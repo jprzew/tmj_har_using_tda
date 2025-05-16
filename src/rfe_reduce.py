@@ -28,6 +28,7 @@ class Params:
     cycles_to_run: int
     rfe_groups: bool
     random_seed: int
+    restrict: int|bool
 
 # Load metadata
 meta = get_metadata()
@@ -128,7 +129,8 @@ def main():
     df = pd.read_pickle(get_repo_path() / data_dir / params.input)
 
     # Sample df for testing purposes
-    df = df.sample(frac=0.3, random_state=params.random_seed)
+    if params.restrict:
+        df = df.sample(frac=params.restrict, random_state=params.random_seed)
 
     training_data = prepare_dataset(df,
                                     non_feature_cols=meta.scalar_columns,

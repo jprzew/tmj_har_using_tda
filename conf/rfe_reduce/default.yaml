@@ -4,3 +4,4 @@ rfecv_output: rfecv_results.pkl
 cycles_to_run: 1
 rfe_groups: False
 random_seed: 0
+restrict: 200
