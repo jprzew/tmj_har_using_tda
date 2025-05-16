@@ -87,7 +87,7 @@ def prepare_dataset(df: pd.DataFrame, non_feature_cols: list[str], target_col: s
     y = np.array(df[target_col])
 
     # Features
-    features_df = df.drop(columns=non_feature_cols + [target_col, group_col])
+    features_df = df.drop(columns=non_feature_cols + [target_col, group_col], errors='ignore')
     X = np.array(features_df)
 
     # Groups & feature names

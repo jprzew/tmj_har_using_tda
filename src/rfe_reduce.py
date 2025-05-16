@@ -42,10 +42,8 @@ data_dir = params['directories']['data']
 params_dict = {**{'input': params['featurize']['output']}, **params['rfe_reduce']}
 params = Params(**params_dict)
 
-
 # Set random seed
 np.random.seed(params.random_seed)
-
 
 
 def ignore_user_warning(func):
@@ -93,26 +91,6 @@ def persistent_elimination(training_data: TrainingData, base_estimator, groups=F
     return results
 
 
-def get_protein_ranking(results, feature_names):
-    def get_protein_ids(cycle):
-        fn = feature_names
-
-        protein_ids = []
-        for estimator in cycle:
-            fn = estimator.get_feature_names_out(fn)
-            protein_ids.append(fn)
-
-        return protein_ids
-
-    def count_protein_ids(cycle):
-        return pd.Series(np.concatenate(get_protein_ids(cycle))).value_counts()
-
-    results_df = pd.concat(map(count_protein_ids, results), axis=1)
-
-    # Create ranking
-    return results_df.fillna(0).apply(sum, axis=1).sort_values(ascending=False)
-
-
 def shuffle_data(training_data: TrainingData) -> TrainingData:
     # Shuffle data
     indices = np.arange(training_data.X.shape[0])
@@ -144,25 +122,20 @@ def compute_feature_ranking(results, feature_names: list[str]) -> pd.Series:
     return results_df.fillna(0).apply(sum, axis=1).sort_values(ascending=False)
 
 
-# TODO: Read params + metadata, load dataset & finish this script
-
 def main():
 
     # Read the input file
     df = pd.read_pickle(get_repo_path() / data_dir / params.input)
 
-
-
+    # Sample df for testing purposes
+    df = df.sample(frac=0.3, random_state=params.random_seed)
 
     training_data = prepare_dataset(df,
-                                    non_feature_cols=meta['scalar_columns'],
-                                    target_col=meta['label_column'],
-                                    group_col=meta['patient_column'])
-
+                                    non_feature_cols=meta.scalar_columns,
+                                    target_col=meta.label_column,
+                                    group_col=meta.patient_column)
 
     training_data = shuffle_data(training_data)
-
-
     model = make_pipeline(get_model('rf'))  # TODO: Parametrize this
 
     results = []
@@ -170,11 +143,15 @@ def main():
         print('Cycle:', cycle)
         results.append(persistent_elimination(training_data, base_estimator=model, groups=params.rfe_groups))
 
+    # Compute feature ranking
+    feature_ranking = compute_feature_ranking(results, training_data.feature_names)
+
+    # Save feature ranking
+    feature_ranking.to_pickle(get_repo_path() / data_dir / params.output)
+
     # Save RFECV results
-    with open(get_repo_path() / RESULTS_FILE, 'wb') as f:
+    with open(get_repo_path() / data_dir / params.rfecv_output, 'wb') as f:
         pickle.dump(results, f)
-
-
 
 
 if __name__ == '__main__':
