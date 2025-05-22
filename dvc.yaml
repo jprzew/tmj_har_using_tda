@@ -74,3 +74,15 @@ stages:
     outs:
       - data/${rfe_reduce.output}
       - data/${rfe_reduce.rfecv_output}
+  crossvalidate:
+    cmd: python src/crossvalidate.py
+    deps:
+      - data/${train_test_split.training_output}
+      - data/${rfe_reduce.output}
+      - src/crossvalidate.py
+      - src/ml_utils.py
+      - src/utils.py
+    params:
+      - crossvalidate
+      - metadata
+

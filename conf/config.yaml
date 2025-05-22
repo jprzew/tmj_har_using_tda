@@ -8,4 +8,5 @@ defaults:
   - train_test_split: default
   - metadata: default
   - rfe_reduce: default
+  - crossvalidate: default
 

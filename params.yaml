@@ -89,5 +89,7 @@ rfe_reduce:
   rfe_groups: false
   random_seed: 0
   restrict: 200
+crossvalidate:
+  random_seed: 42
 directories:
   data: data
