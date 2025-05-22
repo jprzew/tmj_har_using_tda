@@ -95,7 +95,7 @@ def robust_cross_val_evaluate_model(X, y, model, cv, groups=None):
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore")
             scores = cross_val_evaluate_model(X, y, model, cv, groups=groups)
-    except:
+    except Exception as e:
         scores = None
     return scores
 
