@@ -85,6 +85,7 @@ stages:
     params:
       - crossvalidate
       - metadata
+      - model
     metrics:
       - metrics/${crossvalidate.output}
 

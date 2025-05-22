@@ -32,9 +32,13 @@ meta = get_metadata()
 # Get the DVC parameters
 params = dvc.api.params_show()
 
-# Data dir
+# Directories
 data_dir = params['directories']['data']
 metrics_dir = params['directories']['metrics']
+
+# Model parameters
+model_name = params['model']['name']
+model_params = {key: value for key, value in params['model'].items() if key != 'name'}
 
 # Stage parameters
 params_dict = {**{'input': params['train_test_split']['training_output'],
@@ -129,7 +133,7 @@ def main():
 
 
     # Create a model
-    model = get_model('rf', random_seed=params.random_seed)
+    model = get_model(model_name, params=model_params, random_seed=params.random_seed)
 
     # Create a pipeline
     pipeline = make_pipeline(model)

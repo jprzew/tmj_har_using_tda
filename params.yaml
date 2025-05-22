@@ -93,6 +93,9 @@ crossvalidate:
   random_seed: 42
   features: 30
   output: crossval_results.json
+model:
+  name: rf
+  n_estimators: 100
 directories:
   data: data
   metrics: metrics

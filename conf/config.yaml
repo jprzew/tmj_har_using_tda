@@ -10,4 +10,4 @@ defaults:
   - metadata: default
   - rfe_reduce: default
   - crossvalidate: default
-
+  - model: random_forest
