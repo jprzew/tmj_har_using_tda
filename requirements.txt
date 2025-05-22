@@ -327,7 +327,10 @@ markupsafe==3.0.2
     #   jinja2
     #   nbconvert
 matplotlib==3.10.0
-    # via persim
+    # via
+    #   -r requirements.in
+    #   persim
+    #   seaborn
 matplotlib-inline==0.1.7
     # via
     #   ipykernel
@@ -373,6 +376,7 @@ numpy==2.2.3
     #   ripser
     #   scikit-learn
     #   scipy
+    #   seaborn
 omegaconf==2.3.0
     # via
     #   dvc
@@ -396,7 +400,9 @@ packaging==24.2
     #   matplotlib
     #   nbconvert
 pandas==2.2.3
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   seaborn
 pandocfilters==1.5.1
     # via nbconvert
 parso==0.8.4
@@ -536,6 +542,8 @@ scmrepo==3.3.10
     # via
     #   dvc
     #   gto
+seaborn==0.13.2
+    # via -r requirements.in
 semver==3.0.4
     # via gto
 send2trash==1.8.3

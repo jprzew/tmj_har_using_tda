@@ -8,3 +8,5 @@ scipy
 jupyter
 jupytext
 hydra-core
+matplotlib
+seaborn
