@@ -1,5 +1,6 @@
 directories:
   data: data
+  metrics: metrics
 defaults:
   - compose: default
   - prepare: default

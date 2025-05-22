@@ -91,5 +91,8 @@ rfe_reduce:
   restrict: 200
 crossvalidate:
   random_seed: 42
+  features: 30
+  output: crossval_results.json
 directories:
   data: data
+  metrics: metrics

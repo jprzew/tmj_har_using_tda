@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import dvc.api
 from dataclasses import dataclass
-
+from functools import partial, update_wrapper
 
 @dataclass
 class Metadata:
@@ -42,3 +42,21 @@ def get_metadata():
 
     metadata.signal_columns = [metadata.signal_columns['acc'], metadata.signal_columns['gyro']]
     return metadata
+
+
+def wrapped_partial(func, *args, **kwargs):
+    partial_func = partial(func, *args, **kwargs)
+    update_wrapper(partial_func, func)
+    return partial_func
+
+labels_to_colours = {0: 'tab:blue',
+                     1: 'tab:orange',
+                     2: 'tab:red',
+                     4: 'tab:purple',
+                     8: 'tab:green'}
+
+labels_to_events = {0: 'nothing',
+                    1: 'speech',
+                    2: 'smoking',
+                    4: 'drinking',
+                    8: 'eating'}

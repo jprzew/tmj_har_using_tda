@@ -1,22 +1,19 @@
 """This is part of a pipeline - calculates best features using multiple RFE"""
 # Standard library imports
-import pickle
-from functools import wraps
 import warnings
 from dataclasses import dataclass
+import json
 
 # Third party imports
-from tqdm import tqdm
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import KFold, GroupKFold
-from sklearn.feature_selection import RFECV
+from sklearn import model_selection
+from sklearn.metrics import balanced_accuracy_score, recall_score, matthews_corrcoef, make_scorer
 import pandas as pd
 import dvc.api
 
 # Local imports
-from ml_utils import prepare_dataset, get_model, make_pipeline, TrainingData
-from utils import get_repo_path, get_metadata
+from ml_utils import prepare_dataset, get_model, make_pipeline
+from utils import get_repo_path, get_metadata, wrapped_partial, labels_to_events
 
 # Parameters
 
@@ -24,6 +21,8 @@ from utils import get_repo_path, get_metadata
 class Params:
     input: str
     input_ranking: str
+    output: str
+    features: int|str
     random_seed: int
 
 
@@ -35,6 +34,7 @@ params = dvc.api.params_show()
 
 # Data dir
 data_dir = params['directories']['data']
+metrics_dir = params['directories']['metrics']
 
 # Stage parameters
 params_dict = {**{'input': params['train_test_split']['training_output'],
@@ -45,5 +45,102 @@ params = Params(**params_dict)
 # Set random seed
 np.random.seed(params.random_seed)
 
-print(params)
-print(meta)
+
+def get_scorers(labels_dict):
+
+    def labeled_matthews(y_test, y_pred, value):
+        return matthews_corrcoef(y_test == value, y_pred == value)
+
+    def labeled_recall(y_test, y_pred, value):
+        return recall_score(y_test == value, y_pred == value, zero_division=0)
+
+    # general scorers
+    balanced_accuracy_scorer = make_scorer(balanced_accuracy_score)
+    matthews_corrcoef_scorer = make_scorer(matthews_corrcoef)
+
+    scorers = {'balanced_accuracy': balanced_accuracy_scorer,
+               'matthews': matthews_corrcoef_scorer}
+
+    # matthews correlation scorers
+    for label, event in labels_dict.items():
+        scoring_function = wrapped_partial(labeled_matthews, value=label)
+        scorers[f'matthews_{event}'] = make_scorer(scoring_function)
+
+    # recall scorers
+    for label, event in labels_dict.items():
+        scoring_function = wrapped_partial(labeled_recall, value=label)
+        scorers[f'recall_{event}'] = make_scorer(scoring_function)
+
+    return scorers
+
+
+def cross_val_evaluate_model(X, y, model, cv, groups=None):
+
+    scorers = get_scorers(labels_to_events)
+    scores = model_selection.cross_validate(model, X, y,
+                                            scoring=scorers,
+                                            cv=cv, groups=groups, n_jobs=-1, )
+
+    return pd.Series(scores)
+
+
+def robust_cross_val_evaluate_model(X, y, model, cv, groups=None):
+    """Evaluates a model and try to trap errors and hide warnings"""
+
+    try:
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore")
+            scores = cross_val_evaluate_model(X, y, model, cv, groups=groups)
+    except:
+        scores = None
+    return scores
+
+
+def main():
+    # Load the dataset
+    df = pd.read_pickle(get_repo_path() / data_dir / params.input)
+    rank_df = pd.read_pickle(get_repo_path() / data_dir / params.input_ranking)
+
+    # Prepare the dataset
+    training_data = prepare_dataset(df,
+                                    non_feature_cols=meta.scalar_columns,
+                                    target_col=meta.label_column,
+                                    group_col=meta.patient_column)
+
+    # Get the features
+    if params.features == 'all':
+        feature_names = training_data.feature_names
+        X = training_data.X
+        groups = training_data.groups
+        y = training_data.y
+    elif isinstance(params.features, int):
+        feature_names = np.array(training_data.feature_names)
+
+        # Use the top features
+        top_features = pd.Series(rank_df.index)[:params.features]
+        to_take_idx = np.isin(feature_names, top_features)
+        X = training_data.X[:, to_take_idx]
+        feature_names = feature_names[to_take_idx]
+
+        groups = training_data.groups
+        y = training_data.y
+    else:
+        raise ValueError(f"Invalid value for features: {params.features}")
+
+
+    # Create a model
+    model = get_model('rf', random_seed=params.random_seed)
+
+    # Create a pipeline
+    pipeline = make_pipeline(model)
+
+    result = robust_cross_val_evaluate_model(X, y, pipeline, cv=5, groups=groups)
+    result_dict = result.apply(lambda x: np.mean(x)).to_dict()
+
+    # Save the results
+    with open(get_repo_path() / metrics_dir / params.output, 'w') as f:
+        f.write(json.dumps(result_dict))
+
+
+if __name__ == '__main__':
+    main()
