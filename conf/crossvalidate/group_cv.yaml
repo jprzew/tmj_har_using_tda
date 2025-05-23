@@ -1,5 +1,9 @@
 random_seed: 42
 features: 30
-cv: 5
-output_categories: all
+cv: logo
+output_categories:
+  - 0
+  - 1
+  - 4
+  - 8
 output: crossval_results.json

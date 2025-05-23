@@ -55,3 +55,11 @@ oob_score: False
 # Complexity parameter used for Minimal Cost-Complexity Pruning. The subtree with the largest cost complexity that
 # is smaller than ccp_alpha will be chosen. By default, no pruning is performed.
 ccp_alpha: 0.0
+
+# The “balanced” mode uses the values of y to automatically adjust weights inversely proportional
+#   to class frequencies in the input data as n_samples / (n_classes * np.bincount(y))
+#
+# The “balanced_subsample” mode is the same as “balanced” except that weights are computed based on the
+#   bootstrap sample for every tree grown.
+# Default: None
+class_weight: null
