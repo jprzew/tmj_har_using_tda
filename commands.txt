@@ -1,0 +1,2 @@
+dvc exp run --set-param 'model=random_forest' --set-param 'model.n_estimators=500' --set-param 'crossvalidate.features=100'
+dvc exp show --drop '.*' --keep '.*estimators'
