@@ -73,8 +73,8 @@ stages:
       size: 6483
     - path: src/utils.py
       hash: md5
-      md5: 9ab1831186b26fc602f4b406f4d6cd60
-      size: 1043
+      md5: f6ab57ee0ed26060ce79bb78c23db55e
+      size: 1601
     params:
       params.yaml:
         metadata:
@@ -230,8 +230,8 @@ stages:
       size: 3938
     - path: src/utils.py
       hash: md5
-      md5: 9ab1831186b26fc602f4b406f4d6cd60
-      size: 1043
+      md5: f6ab57ee0ed26060ce79bb78c23db55e
+      size: 1601
     params:
       params.yaml:
         featurize:
@@ -346,8 +346,8 @@ stages:
       size: 1896
     - path: src/utils.py
       hash: md5
-      md5: 9ab1831186b26fc602f4b406f4d6cd60
-      size: 1043
+      md5: f6ab57ee0ed26060ce79bb78c23db55e
+      size: 1601
     params:
       params.yaml:
         metadata:
@@ -403,20 +403,22 @@ stages:
       size: 5442148
     - path: src/crossvalidate.py
       hash: md5
-      md5: a6ac71fec10f40e57d046a211ad1fe7d
-      size: 1151
+      md5: 99fde470ed7d660e2ebb15d5f199027d
+      size: 4681
     - path: src/ml_utils.py
       hash: md5
-      md5: b30611129895c10c3dc3498834697abd
-      size: 4281
+      md5: d7bb2bcb378079cd00d846125afc3101
+      size: 8560
     - path: src/utils.py
       hash: md5
-      md5: 9ab1831186b26fc602f4b406f4d6cd60
-      size: 1043
+      md5: f6ab57ee0ed26060ce79bb78c23db55e
+      size: 1601
     params:
       params.yaml:
         crossvalidate:
           random_seed: 42
+          features: 100
+          output: crossval_results.json
         metadata:
           label_column: acc_gyro_event
           timestamp_column: acc_gyro_timestamp
@@ -444,3 +446,22 @@ stages:
           patient_column: patient_id
           measure_column: measure_id
           augment_column: augmented
+        model:
+          name: rf
+          n_estimators: 500
+          criterion: gini
+          max_depth:
+          max_features: sqrt
+          max_leaf_nodes:
+          min_impurity_decrease: 0.0
+          min_samples_leaf: 1
+          min_samples_split: 2
+          min_weight_fraction_leaf: 0.0
+          max_samples:
+          oob_score: false
+          ccp_alpha: 0.0
+    outs:
+    - path: metrics/crossval_results.json
+      hash: md5
+      md5: a0e2defc77fc49ff05a34b7150324bda
+      size: 574

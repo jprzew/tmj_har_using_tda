@@ -74,6 +74,7 @@ stages:
     outs:
       - data/${rfe_reduce.output}
       - data/${rfe_reduce.rfecv_output}
+    frozen: true
   crossvalidate:
     cmd: python src/crossvalidate.py
     deps:

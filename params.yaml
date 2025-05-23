@@ -91,11 +91,11 @@ rfe_reduce:
   restrict: 200
 crossvalidate:
   random_seed: 42
-  features: 30
+  features: 100
   output: crossval_results.json
 model:
   name: rf
-  n_estimators: 200
+  n_estimators: 500
   criterion: gini
   max_depth: null
   max_features: sqrt
