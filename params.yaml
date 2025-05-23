@@ -92,12 +92,9 @@ rfe_reduce:
 crossvalidate:
   random_seed: 42
   features: 30
-  cv: logo
-  output_categories:
-  - 0
-  - 1
-  - 4
-  - 8
+  cv: 5
+  output_categories: all
+  use_pipeline: false
   output: crossval_results.json
 model:
   name: rf

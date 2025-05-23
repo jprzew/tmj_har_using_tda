@@ -26,6 +26,7 @@ class Params:
     cv: int|str
     output_categories: str|list
     features: int|str
+    use_pipeline: bool
     random_seed: int
 
 
@@ -164,11 +165,12 @@ def main():
     model = get_model(model_name, params=model_params, random_seed=params.random_seed)
 
     # Create a pipeline
-    pipeline = make_pipeline(model)
+    if params.use_pipeline:
+        model = make_pipeline(model)
 
     result = robust_cross_val_evaluate_model(training_data.X,
                                              training_data.y,
-                                             pipeline,
+                                             model,
                                              cv=cv,
                                              groups=training_data.groups)
     result_dict = result.apply(lambda x: np.mean(x)).to_dict()
