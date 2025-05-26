@@ -15,7 +15,7 @@ grid = ParameterGrid(param_grid)
 
 for params in grid:
     subprocess.run(["dvc", "exp", "run", "--queue",
-                    "--set-param", f"'model=random_forest'",
+                    "--set-param", f"model=random_forest",
                     "--set-param", f"model.n_estimators={params['n_estimators']}",
                     "--set-param", f"model.min_samples_leaf={params['min_samples_leaf']}",
                     "--set-param", f"model.min_samples_split={params['min_samples_split']}",
