@@ -1,8 +1,7 @@
-from pyexpat import features
 from sklearn.model_selection import ParameterGrid
 import subprocess
-import random
-
+from utils import get_repo_path
+from tqdm import tqdm
 
 param_grid = {'n_estimators': [50, 100, 200, 500, 1000],
               'min_samples_leaf': [1, 5, 10, 20],
@@ -13,11 +12,16 @@ param_grid = {'n_estimators': [50, 100, 200, 500, 1000],
 grid = ParameterGrid(param_grid)
 
 
-for params in grid:
-    subprocess.run(["dvc", "exp", "run", "--queue",
-                    "--set-param", f"model=random_forest",
-                    "--set-param", f"model.n_estimators={params['n_estimators']}",
-                    "--set-param", f"model.min_samples_leaf={params['min_samples_leaf']}",
-                    "--set-param", f"model.min_samples_split={params['min_samples_split']}",
-                    "--set-param", f"model.max_depth={params['max_depth']}",
-                    "--set-param", f"crossvalidate.features={params['features']}"])
+for params in tqdm(grid):
+    command = ["dvc", "exp", "run", "--queue",
+               "--set-param", f"model=random_forest",
+               "--set-param", f"model.n_estimators={params['n_estimators']}",
+               "--set-param", f"model.min_samples_leaf={params['min_samples_leaf']}",
+               "--set-param", f"model.min_samples_split={params['min_samples_split']}",
+               "--set-param", f"model.max_depth={params['max_depth']}",
+               "--set-param", f"crossvalidate.features={params['features']}"]
+
+    subprocess.run(command, cwd=str(get_repo_path()))
+
+# To run: dvc exp run --run-all
+# To show: dvc exp show --drop '.*' --keep 'Experiment|.*accuracy|.*estimators|.*leaf'
