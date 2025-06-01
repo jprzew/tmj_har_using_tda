@@ -91,14 +91,26 @@ rfe_reduce:
   restrict: 200
 crossvalidate:
   random_seed: 42
-  features: 30
+  features: 200
   cv: 5
   output_categories: all
   use_pipeline: false
   output: crossval_results.json
 model:
   name: rf
-  n_estimators: 100
+  n_estimators: 1000
+  criterion: gini
+  max_depth: None
+  max_features: sqrt
+  max_leaf_nodes: null
+  min_impurity_decrease: 0.0
+  min_samples_leaf: 20
+  min_samples_split: 30
+  min_weight_fraction_leaf: 0.0
+  max_samples: null
+  oob_score: false
+  ccp_alpha: 0.0
+  class_weight: null
 directories:
   data: data
   metrics: metrics

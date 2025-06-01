@@ -403,8 +403,8 @@ stages:
       size: 5442148
     - path: src/crossvalidate.py
       hash: md5
-      md5: 99fde470ed7d660e2ebb15d5f199027d
-      size: 4681
+      md5: ec24d9f0e15cd800b190f1d48d537eab
+      size: 5984
     - path: src/ml_utils.py
       hash: md5
       md5: d7bb2bcb378079cd00d846125afc3101
@@ -417,7 +417,10 @@ stages:
       params.yaml:
         crossvalidate:
           random_seed: 42
-          features: 100
+          features: 30
+          cv: 5
+          output_categories: all
+          use_pipeline: false
           output: crossval_results.json
         metadata:
           label_column: acc_gyro_event
@@ -448,20 +451,9 @@ stages:
           augment_column: augmented
         model:
           name: rf
-          n_estimators: 500
-          criterion: gini
-          max_depth:
-          max_features: sqrt
-          max_leaf_nodes:
-          min_impurity_decrease: 0.0
-          min_samples_leaf: 1
-          min_samples_split: 2
-          min_weight_fraction_leaf: 0.0
-          max_samples:
-          oob_score: false
-          ccp_alpha: 0.0
+          n_estimators: 100
     outs:
     - path: metrics/crossval_results.json
       hash: md5
-      md5: a0e2defc77fc49ff05a34b7150324bda
-      size: 574
+      md5: 7bf8a4645424ce7f5766685552c251b7
+      size: 589

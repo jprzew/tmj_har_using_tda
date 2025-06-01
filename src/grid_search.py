@@ -7,7 +7,7 @@ param_grid = {'n_estimators': [50, 100, 200, 500, 1000],
               'min_samples_leaf': [1, 5, 10, 20],
               'min_samples_split': [2, 5, 10, 30],
               'features': [10, 20, 40, 80, 100, 200],
-              'max_depth': [3, 5, 10, 20, None]}
+              'max_depth': [3, 5, 10, 20, None]}  # TODO: None should probably be 'null'
 
 grid = ParameterGrid(param_grid)
 
@@ -25,3 +25,4 @@ for params in tqdm(grid):
 
 # To run: dvc exp run --run-all
 # To show: dvc exp show --drop '.*' --keep 'Experiment|.*accuracy|.*estimators|.*leaf'
+# To csv: dvc exp show --csv --drop '.*' --keep 'Experiment|State|.*accuracy|.*estimators|.*leaf|.*depth|.*features'
