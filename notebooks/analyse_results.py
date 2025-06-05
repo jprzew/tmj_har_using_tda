@@ -17,7 +17,12 @@
 import pandas as pd
 
 # %%
-df = pd.read_csv('results2.csv')
+df = pd.read_csv('results.csv')
+
+# %%
+
+# %%
+df
 
 # %%
 df['State'] = df.State.fillna('Success')
@@ -53,6 +58,9 @@ df['model.min_weight_fraction_leaf'].value_counts()
 df[['test_balanced_accuracy', 'crossvalidate.features']].boxplot(by='crossvalidate.features')
 
 # %%
+df['model.class_weight'].value_counts()
+
+# %%
 df.sort_values(by='test_balanced_accuracy', ascending=False).head(n=10)
 
 # %% [markdown]
@@ -81,5 +89,8 @@ df.sort_values(by='test_balanced_accuracy', ascending=False).head(n=10)
 # consider multiple values of max features sqrt
 #
 #
+
+# %%
+df.query('`model.n_estimators` == 1000')
 
 # %%
