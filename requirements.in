@@ -10,3 +10,4 @@ jupytext
 hydra-core
 matplotlib
 seaborn
+optuna

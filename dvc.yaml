@@ -89,4 +89,20 @@ stages:
       - model
     metrics:
       - metrics/${crossvalidate.output}
+    frozen: true
+  optuna:
+    cmd: python src/optuna_optim.py
+    deps:
+      - data/${train_test_split.training_output}
+      - data/${rfe_reduce.output}
+      - src/optuna_optim.py
+      - src/crossvalidate.py
+      - src/ml_utils.py
+      - src/utils.py
+    params:
+      - crossvalidate
+      - metadata
+      - model.name
+    metrics:
+      - metrics/optuna_results.json
 

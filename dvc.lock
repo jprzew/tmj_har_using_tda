@@ -457,3 +457,72 @@ stages:
       hash: md5
       md5: 7bf8a4645424ce7f5766685552c251b7
       size: 589
+  optuna:
+    cmd: python src/optuna_optim.py
+    deps:
+    - path: data/features_rank.pkl
+      hash: md5
+      md5: a6ad43c55063b558cfcc47ad377d8cc0
+      size: 14891
+    - path: data/train_features.pkl
+      hash: md5
+      md5: 4a5aabff2a3276454a6d05be013ca50c
+      size: 5442148
+    - path: src/crossvalidate.py
+      hash: md5
+      md5: ec24d9f0e15cd800b190f1d48d537eab
+      size: 5984
+    - path: src/ml_utils.py
+      hash: md5
+      md5: d7bb2bcb378079cd00d846125afc3101
+      size: 8560
+    - path: src/optuna_optim.py
+      hash: md5
+      md5: 366f97bd0f2a67a097e0c8be24d50961
+      size: 3893
+    - path: src/utils.py
+      hash: md5
+      md5: f6ab57ee0ed26060ce79bb78c23db55e
+      size: 1601
+    params:
+      params.yaml:
+        crossvalidate:
+          random_seed: 42
+          features: 10
+          cv: 5
+          output_categories: all
+          use_pipeline: false
+          output: crossval_results.json
+        metadata:
+          label_column: acc_gyro_event
+          timestamp_column: acc_gyro_timestamp
+          correct_labels:
+          - 0
+          - 1
+          - 2
+          - 4
+          - 8
+          timestamp_multiplier: 0.0001
+          signal_columns:
+            acc:
+            - acc_x
+            - acc_y
+            - acc_z
+            gyro:
+            - gyro_x
+            - gyro_y
+            - gyro_z
+          scalar_columns:
+          - patient_id
+          - measure_id
+          - augmented
+          datetime_column: packet_start_time
+          patient_column: patient_id
+          measure_column: measure_id
+          augment_column: augmented
+        model.name: rf
+    outs:
+    - path: metrics/optuna_results.json
+      hash: md5
+      md5: 2abc51642a070762157062b468ecad81
+      size: 139
