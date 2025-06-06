@@ -1,14 +1,12 @@
 """OPTUNA"""
 # Standard library imports
-import warnings
+import logging
 from dataclasses import dataclass
 import json
 
 # Third party imports
 import optuna
 import numpy as np
-from sklearn import model_selection
-from sklearn.metrics import balanced_accuracy_score, recall_score, matthews_corrcoef, make_scorer
 from sklearn.model_selection import LeaveOneGroupOut, KFold
 import pandas as pd
 import dvc.api
@@ -19,19 +17,14 @@ from utils import get_repo_path, get_metadata, wrapped_partial, labels_to_events
 import crossvalidate
 from crossvalidate import filter_data, robust_cross_val_evaluate_model
 
-# Parameters
+# Configure logging
+logging.basicConfig(
+    filename='optuna.log',
+    level=logging.INFO,  # or DEBUG, WARNING, etc.
+    format='%(asctime)s %(levelname)s:%(message)s'
+)
 
-@dataclass
-class Params:
-    input: str
-    input_ranking: str
-    output: str
-    cv: int|str
-    output_categories: str|list
-    features: int|str
-    use_pipeline: bool
-    random_seed: int
-
+logging.info('Started Optuna optimization.')
 
 # Load metadata
 meta = get_metadata()
@@ -87,8 +80,9 @@ def objective(trial):
         'n_estimators': trial.suggest_int('n_estimators', 100, 1000),
         'max_depth': trial.suggest_int('max_depth', 5, 50),
         'min_samples_split': trial.suggest_int('min_samples_split', 2, 10),
-        'min_samples_leaf': trial.suggest_int('min_samples_leaf', 1, 5),
-        'max_features': trial.suggest_categorical('max_features', [None, 'sqrt', 'log2'])
+        'min_samples_leaf': trial.suggest_int('min_samples_leaf', 1, 8),
+        'max_features': trial.suggest_categorical('max_features', [None, 'sqrt', 'log2']),
+        'min_weight_fraction_leaf': trial.suggest_float('min_weight_fraction_leaf', 0.0, 0.4),
     }
 
     model = get_model(model_name, params=model_params, random_seed=params.random_seed)
