@@ -17,7 +17,7 @@
 import pandas as pd
 
 # %%
-df = pd.read_csv('results.csv')
+df = pd.read_csv('results2.csv')
 
 # %%
 
@@ -25,7 +25,7 @@ df = pd.read_csv('results.csv')
 df
 
 # %%
-df['State'] = df.State.fillna('Success')
+# df['State'] = df.State.fillna('Success')
 
 # %%
 df = df.query('State == "Success"')
@@ -92,5 +92,16 @@ df.sort_values(by='test_balanced_accuracy', ascending=False).head(n=10)
 
 # %%
 df.query('`model.n_estimators` == 1000')
+
+# %%
+
+# %%
+df[['test_balanced_accuracy', 'model.class_weight']].fillna('na').boxplot(by='model.class_weight')
+
+# %%
+df.sort_values(by='test_balanced_accuracy', ascending=False)
+
+# %%
+df[['test_balanced_accuracy', 'crossvalidate.features']].fillna('na').boxplot(by='crossvalidate.features')
 
 # %%
