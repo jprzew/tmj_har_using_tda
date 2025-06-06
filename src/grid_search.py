@@ -26,3 +26,5 @@ for params in tqdm(grid):
 # To run: dvc exp run --run-all
 # To show: dvc exp show --drop '.*' --keep 'Experiment|.*accuracy|.*estimators|.*leaf'
 # To csv: dvc exp show --csv --drop '.*' --keep 'Experiment|State|.*accuracy|.*estimators|.*leaf|.*depth|.*features'
+
+# dvc exp run --queue --set-param model=random_forest --set-param crossvalidate.cv=5,10,15 --set-param crossvalidate.use_pipeline=true,false --set-param crossvalidate.random_seed=0,1,10,42  --set-param crossvalidate.features=100,150

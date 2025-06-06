@@ -19,7 +19,7 @@ from crossvalidate import filter_data, robust_cross_val_evaluate_model
 
 # Configure logging
 logging.basicConfig(
-    filename='optuna.log',
+    filename=str(get_repo_path() / 'optuna.log'),
     level=logging.INFO,  # or DEBUG, WARNING, etc.
     format='%(asctime)s %(levelname)s:%(message)s'
 )
