@@ -488,7 +488,7 @@ stages:
       params.yaml:
         crossvalidate:
           random_seed: 42
-          features: 10
+          features: 100
           cv: 5
           output_categories: all
           use_pipeline: false
@@ -524,5 +524,5 @@ stages:
     outs:
     - path: metrics/optuna_results.json
       hash: md5
-      md5: 2abc51642a070762157062b468ecad81
+      md5: 9d0040e3945520656dd91496d880b299
       size: 139
