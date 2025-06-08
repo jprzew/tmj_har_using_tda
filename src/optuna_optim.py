@@ -109,7 +109,7 @@ def objective(trial):
 def main():
 
     study = optuna.create_study(direction='maximize')
-    study.optimize(objective, n_trials=20)
+    study.optimize(objective, n_trials=60)
 
 
 
