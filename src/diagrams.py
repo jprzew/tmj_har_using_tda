@@ -111,7 +111,9 @@ def restrict_data(df: pd.DataFrame, n: Optional[int]) -> pd.DataFrame:
     if n is None:
         return df
 
-    return df.groupby(meta.label_column).sample(n)
+    return df.groupby(meta.label_column, group_keys=False).apply(
+        lambda g: g.sample(n=min(n, len(g)))
+    )
 
 
 def compute_diagrams(original_df: pd.DataFrame, key: str, columns: list[str, str]) -> pd.DataFrame:

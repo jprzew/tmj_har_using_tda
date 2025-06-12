@@ -1,5 +1,5 @@
 output: diagrams.pkl
-restrict: 500
+restrict: 5000
 columns:
   xy: ['acc_x', 'acc_y']
   xz: ['acc_x', 'acc_z']

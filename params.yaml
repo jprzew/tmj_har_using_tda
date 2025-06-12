@@ -14,7 +14,7 @@ prepare:
   subsample: false
 diagrams:
   output: diagrams.pkl
-  restrict: 500
+  restrict: 5000
   columns:
     xy:
     - acc_x
@@ -91,26 +91,14 @@ rfe_reduce:
   restrict: 200
 crossvalidate:
   random_seed: 42
-  features: 10
+  features: 30
   cv: 5
   output_categories: all
   use_pipeline: false
   output: crossval_results.json
 model:
   name: rf
-  n_estimators: 200
-  criterion: gini
-  max_depth: null
-  max_features: sqrt
-  max_leaf_nodes: null
-  min_impurity_decrease: 0.0
-  min_samples_leaf: 1
-  min_samples_split: 2
-  min_weight_fraction_leaf: 0.0
-  max_samples: null
-  oob_score: false
-  ccp_alpha: 0.0
-  class_weight: null
+  n_estimators: 100
 directories:
   data: data
   metrics: metrics
