@@ -143,7 +143,7 @@ stages:
       params.yaml:
         diagrams:
           output: diagrams.pkl
-          restrict: 500
+          restrict: 5000
           columns:
             xy:
             - acc_x
@@ -156,11 +156,13 @@ stages:
             - acc_z
           params:
           - dim: 2
-            kind: abs
-            fil: star
+          - dim: 3
+          - dim: 4
+          - dim: 10
           - dim: 2
-            kind: phi
-            fil: star
+            kind: abs
+          - dim: 10
+            kind: abs
         metadata:
           label_column: acc_gyro_event
           timestamp_column: acc_gyro_timestamp
@@ -191,8 +193,8 @@ stages:
     outs:
     - path: data/diagrams.pkl
       hash: md5
-      md5: 2a598b3dbd327dd64af7a430720c37d6
-      size: 39348563
+      md5: 4b18b239f2be3212bc7a2dbafbac711e
+      size: 5539233396
   featurize:
     cmd: python src/featurize.py
     deps:
