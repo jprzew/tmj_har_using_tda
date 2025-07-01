@@ -48,8 +48,6 @@ diagrams:
     step: 30
   - dim: 4
     step: 30
-  - dim: 666
-    step: 666
 featurize:
   output: features.pkl
 train_test_split:

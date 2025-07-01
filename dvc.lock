@@ -133,8 +133,8 @@ stages:
       size: 23956
     - path: src/diagrams.py
       hash: md5
-      md5: b3c7e0a33f2904a2d85e2ecdcf133c0d
-      size: 4774
+      md5: 401ecc479f1a351d57399a5388a3e0d6
+      size: 4927
     - path: src/utils.py
       hash: md5
       md5: f6ab57ee0ed26060ce79bb78c23db55e
@@ -156,6 +156,13 @@ stages:
             - acc_z
           params:
           - dim: 2
+          - dim: 3
+          - dim: 4
+          - dim: 10
+          - dim: 2
+            kind: abs
+          - dim: 10
+            kind: abs
           - dim: 2
             kind: phi
           - dim: 10
@@ -200,15 +207,15 @@ stages:
     outs:
     - path: data/diagrams.pkl
       hash: md5
-      md5: e8c4052e102207275ccccc451da1309a
-      size: 4769634389
+      md5: 60ff066b3df3b447a4e68ee5b597287e
+      size: 9484750072
   featurize:
     cmd: python src/featurize.py
     deps:
     - path: data/diagrams.pkl
       hash: md5
-      md5: 6c0300e025fb8ed4587b60fe12bd8604
-      size: 1127495516
+      md5: 60ff066b3df3b447a4e68ee5b597287e
+      size: 9484750072
     - path: src/data_transformer.py
       hash: md5
       md5: 5e0d2c76aec3be8a435cc665206c123a
@@ -259,8 +266,8 @@ stages:
     outs:
     - path: data/features.pkl
       hash: md5
-      md5: 770e6ac03abc8b27555137d13db3208c
-      size: 6799150
+      md5: 5ae07da25537a02ba81a4c183437c7db
+      size: 57285034
   rfe_reduce:
     cmd: python src/rfe_reduce.py
     deps:
@@ -331,8 +338,8 @@ stages:
     deps:
     - path: data/features.pkl
       hash: md5
-      md5: 770e6ac03abc8b27555137d13db3208c
-      size: 6799150
+      md5: 5ae07da25537a02ba81a4c183437c7db
+      size: 57285034
     - path: src/train_test_split.py
       hash: md5
       md5: 5d14c1d130e8c323a9f37ac9b1127dd3
@@ -377,12 +384,12 @@ stages:
     outs:
     - path: data/test_features.pkl
       hash: md5
-      md5: 710b8012825071f32915a8927810c991
-      size: 1371146
+      md5: 79aaba8b9ae686c0b3936b524b044ae2
+      size: 11469957
     - path: data/train_features.pkl
       hash: md5
-      md5: 4a5aabff2a3276454a6d05be013ca50c
-      size: 5442148
+      md5: 27367548bbd6425176db1a4bab0a2a83
+      size: 45829230
   crossvalidate:
     cmd: python src/crossvalidate.py
     deps:
@@ -392,8 +399,8 @@ stages:
       size: 14891
     - path: data/train_features.pkl
       hash: md5
-      md5: 4a5aabff2a3276454a6d05be013ca50c
-      size: 5442148
+      md5: 27367548bbd6425176db1a4bab0a2a83
+      size: 45829230
     - path: src/crossvalidate.py
       hash: md5
       md5: ec24d9f0e15cd800b190f1d48d537eab
@@ -448,8 +455,8 @@ stages:
     outs:
     - path: metrics/crossval_results.json
       hash: md5
-      md5: 7bf8a4645424ce7f5766685552c251b7
-      size: 589
+      md5: 7b4c29eed9669e400054eb2876c5d5dd
+      size: 586
   optuna:
     cmd: python src/optuna_optim.py
     deps:
@@ -459,8 +466,8 @@ stages:
       size: 14891
     - path: data/train_features.pkl
       hash: md5
-      md5: 4a5aabff2a3276454a6d05be013ca50c
-      size: 5442148
+      md5: 27367548bbd6425176db1a4bab0a2a83
+      size: 45829230
     - path: src/crossvalidate.py
       hash: md5
       md5: ec24d9f0e15cd800b190f1d48d537eab
@@ -471,8 +478,8 @@ stages:
       size: 8560
     - path: src/optuna_optim.py
       hash: md5
-      md5: 366f97bd0f2a67a097e0c8be24d50961
-      size: 3893
+      md5: ad285f3f80503cd02421eaa1f7568e80
+      size: 3887
     - path: src/utils.py
       hash: md5
       md5: f6ab57ee0ed26060ce79bb78c23db55e
@@ -481,7 +488,7 @@ stages:
       params.yaml:
         crossvalidate:
           random_seed: 42
-          features: 10
+          features: 30
           cv: 5
           output_categories: all
           use_pipeline: false
@@ -517,5 +524,5 @@ stages:
     outs:
     - path: metrics/optuna_results.json
       hash: md5
-      md5: 2abc51642a070762157062b468ecad81
-      size: 139
+      md5: 4c96ce4c480551eb797281fd65f2178b
+      size: 190

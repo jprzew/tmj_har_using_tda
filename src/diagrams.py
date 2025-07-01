@@ -1,4 +1,5 @@
 """Calculates persistence diagrams"""
+import os
 
 import pandas as pd
 import dvc.api
@@ -145,6 +146,11 @@ def compute_diagrams(original_df: pd.DataFrame, key: str, columns: list[str, str
 
 
 def main():
+
+    # Quick fix for not changing the diagrams
+    # Perform copy
+    os.system('cp ../temp/merged_diagrams.pkl data/diagrams.pkl')
+    return
 
     # Read data
     original_df = pd.read_pickle(get_repo_path() / data_dir / params.input)
