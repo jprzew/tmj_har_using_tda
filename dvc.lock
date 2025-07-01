@@ -156,13 +156,20 @@ stages:
             - acc_z
           params:
           - dim: 2
-          - dim: 3
-          - dim: 4
+          - dim: 2
+            kind: phi
           - dim: 10
+            kind: phi
           - dim: 2
             kind: abs
-          - dim: 10
-            kind: abs
+            fil: star
+          - dim: 2
+            kind: phi
+            fil: star
+          - dim: 2
+            step: 30
+          - dim: 4
+            step: 30
         metadata:
           label_column: acc_gyro_event
           timestamp_column: acc_gyro_timestamp
@@ -193,8 +200,8 @@ stages:
     outs:
     - path: data/diagrams.pkl
       hash: md5
-      md5: 4b18b239f2be3212bc7a2dbafbac711e
-      size: 5539233396
+      md5: e8c4052e102207275ccccc451da1309a
+      size: 4769634389
   featurize:
     cmd: python src/featurize.py
     deps:

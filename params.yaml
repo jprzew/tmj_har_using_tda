@@ -27,13 +27,20 @@ diagrams:
     - acc_z
   params:
   - dim: 2
-  - dim: 3
-  - dim: 4
+  - dim: 2
+    kind: phi
   - dim: 10
+    kind: phi
   - dim: 2
     kind: abs
-  - dim: 10
-    kind: abs
+    fil: star
+  - dim: 2
+    kind: phi
+    fil: star
+  - dim: 2
+    step: 30
+  - dim: 4
+    step: 30
 featurize:
   output: features.pkl
 train_test_split:
