@@ -161,7 +161,7 @@ with warnings.catch_warnings():   # catch_warnings is useful when autoreload is 
             df = self.df
 
             if modulation_type == 'all':
-                df = df.groupby('modulation_type', as_index=False).sample(n=max_rows)
+                df = df.groupby('acc_gyro_event', as_index=False).sample(n=max_rows)
             elif modulation_type is not None:
                 df = df.loc[df.modulation_type == modulation_type]
                 df = df.sample(n=max_rows)
@@ -193,7 +193,7 @@ with warnings.catch_warnings():   # catch_warnings is useful when autoreload is 
             for ind, (original_index, row) in enumerate(df.iterrows()):
                 plt.sca(axes[ind])
                 rips.plot(row[data_col], show=False)
-                axes[ind].set_title(f'Modulation: {row["modulation_type"]}. Index: {original_index}. SNR={row["SNR"]}')
+                axes[ind].set_title(f'Activity: {row["acc_gyro_event"]}. Index: {original_index}. patient={row["patient_id"]}')
 
         # TODO: This function requires refactoring; together with __get_view_for_plots
         def plot_clouds(self,
