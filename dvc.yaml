@@ -35,6 +35,7 @@ stages:
       - metadata
     outs:
     - data/${diagrams.output}
+    frozen: true
   featurize:
     cmd: python src/featurize.py
     deps:
@@ -48,7 +49,6 @@ stages:
       - metadata
     outs:
       - data/${featurize.output}
-    frozen: true
   train_test_split:
     cmd: python src/train_test_split.py
     deps:
@@ -61,7 +61,6 @@ stages:
     outs:
       - data/${train_test_split.training_output}
       - data/${train_test_split.test_output}
-    frozen: true
   rfe_reduce:
     cmd: python src/rfe_reduce.py
     deps:
@@ -90,7 +89,6 @@ stages:
       - model
     metrics:
       - metrics/${crossvalidate.output}
-    frozen: true
   optuna:
     cmd: python src/optuna_optim.py
     deps:
@@ -106,5 +104,4 @@ stages:
       - model.name
     metrics:
       - metrics/optuna_results.json
-    frozen: true
 

@@ -6,11 +6,11 @@ columns:
   yz: ['acc_y', 'acc_z']
 params:
   - {'dim': 2}
-  # - {'dim': 3}
-  # - {'dim': 4}
-  # - {'dim': 10}
-  # - {'dim': 2, 'kind': 'abs' }
-  # - {'dim': 10, 'kind': 'abs' }
+  - {'dim': 3}
+  - {'dim': 4}
+  - {'dim': 10}
+  - {'dim': 2, 'kind': 'abs' }
+  - {'dim': 10, 'kind': 'abs' }
   - {'dim': 2, 'kind': 'phi' }
   - {'dim': 10, 'kind': 'phi' }
   - {'dim': 2, 'kind': 'abs', 'fil': 'star'}
