@@ -463,12 +463,12 @@ stages:
           max_samples:
           oob_score: false
           ccp_alpha: 0.0
-          class_weight:
+          class_weight: balanced
     outs:
     - path: metrics/crossval_results.json
       hash: md5
-      md5: e45ce4d9013bc251ed8397ff97ae7c53
-      size: 587
+      md5: b777fe71ff49916c63cf85e448042f0d
+      size: 584
   optuna:
     cmd: python src/optuna_optim.py
     deps:

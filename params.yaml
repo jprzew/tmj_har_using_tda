@@ -110,7 +110,7 @@ model:
   max_samples: null
   oob_score: false
   ccp_alpha: 0.0
-  class_weight: null
+  class_weight: balanced
 directories:
   data: data
   metrics: metrics
