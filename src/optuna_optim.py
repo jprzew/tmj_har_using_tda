@@ -26,6 +26,9 @@ logging.basicConfig(
 
 logging.info('Started Optuna optimization.')
 
+
+N_TRIALS = 200  # Number of trials for Optuna
+
 # Load metadata
 meta = get_metadata()
 
@@ -103,7 +106,7 @@ def objective(trial):
 def main():
 
     study = optuna.create_study(direction='maximize')
-    study.optimize(objective, n_trials=20)
+    study.optimize(objective, n_trials=N_TRIALS)
 
 
 

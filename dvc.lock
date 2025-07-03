@@ -417,7 +417,7 @@ stages:
       params.yaml:
         crossvalidate:
           random_seed: 42
-          features: 30
+          features: 100
           cv: 5
           output_categories: all
           use_pipeline: false
@@ -455,7 +455,7 @@ stages:
     outs:
     - path: metrics/crossval_results.json
       hash: md5
-      md5: 7b4c29eed9669e400054eb2876c5d5dd
+      md5: bcd04fddd11eed8dc732f19eedd4415c
       size: 586
   optuna:
     cmd: python src/optuna_optim.py
@@ -478,8 +478,8 @@ stages:
       size: 8560
     - path: src/optuna_optim.py
       hash: md5
-      md5: ad285f3f80503cd02421eaa1f7568e80
-      size: 3887
+      md5: 8b66b9230f556be0e7d4c55b5ac42059
+      size: 3941
     - path: src/utils.py
       hash: md5
       md5: f6ab57ee0ed26060ce79bb78c23db55e
@@ -488,7 +488,7 @@ stages:
       params.yaml:
         crossvalidate:
           random_seed: 42
-          features: 30
+          features: 100
           cv: 5
           output_categories: all
           use_pipeline: false
@@ -524,5 +524,5 @@ stages:
     outs:
     - path: metrics/optuna_results.json
       hash: md5
-      md5: 4c96ce4c480551eb797281fd65f2178b
-      size: 190
+      md5: 3582d45909bec65496e3ebe84ced49c1
+      size: 191

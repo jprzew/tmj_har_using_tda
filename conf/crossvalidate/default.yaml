@@ -1,5 +1,5 @@
 random_seed: 42
-features: 30
+features: 100
 cv: 5
 output_categories: all
 use_pipeline: false
