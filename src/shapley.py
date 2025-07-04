@@ -1,28 +1,24 @@
-"""This model computes test metrics."""
+"""This is a script to train a model."""
 # Standard library imports
 from dataclasses import dataclass
 import pickle
-from sys import pycache_prefix
 
+import matplotlib.pyplot as plt
 # Third party imports
 import numpy as np
-from dvc.parsing import METRICS_KWD
-from prometheus_client.metrics_core import METRIC_NAME_RE
 from sklearn import model_selection
-from sklearn.metrics import balanced_accuracy_score, recall_score, matthews_corrcoef, make_scorer, confusion_matrix
+from sklearn.metrics import balanced_accuracy_score, recall_score, matthews_corrcoef, make_scorer
 from sklearn.model_selection import LeaveOneGroupOut, KFold
 import pandas as pd
-import matplotlib.pyplot as plt
 import dvc.api
+import shap
 
 # Local imports
-from ml_utils import prepare_dataset, get_model, make_pipeline, TrainingData, make_confusion_matrix
+from ml_utils import prepare_dataset, get_model, make_pipeline, TrainingData
 from utils import get_repo_path, get_metadata, wrapped_partial, labels_to_events
-from crossvalidate import get_scorers
-
-from utils import labels_to_events
 
 # Parameters
+
 @dataclass
 class Params:
     input: str
@@ -44,24 +40,19 @@ params = dvc.api.params_show()
 # Directories
 data_dir = params['directories']['data']
 MODELS_DIR = 'models'
-METRICS_DIR = 'metrics'
-OUTPUT_JSON = 'test_metrics.json'
 
 # Model file name
 MODEL_FILE = 'model.pkl'
 
-# Training data
-TEST_DATA_FILE = 'test_features.pkl'
-
-
-
+# Model parameters
+model_name = params['model']['name']
+model_params = {key: value for key, value in params['model'].items() if key != 'name'}
 
 # Stage parameters
 params_dict = {**{'input': params['train_test_split']['training_output'],
                   'input_ranking': params['rfe_reduce']['output']},
                **params['crossvalidate']}
 params = Params(**params_dict)
-
 
 # Set random seed
 np.random.seed(params.random_seed)
@@ -104,7 +95,7 @@ def filter_data(training_data: TrainingData, rank_df: pd.DataFrame) -> TrainingD
 
 def main():
     # Load the dataset
-    df = pd.read_pickle(get_repo_path() / data_dir / TEST_DATA_FILE)
+    df = pd.read_pickle(get_repo_path() / data_dir / params.input)
     rank_df = pd.read_pickle(get_repo_path() / data_dir / params.input_ranking)
 
     # Prepare the dataset
@@ -114,53 +105,26 @@ def main():
                                     group_col=meta.patient_column)
 
     # Filter the data
-    test_data = filter_data(training_data, rank_df)
+    training_data = filter_data(training_data, rank_df)
 
-    scorers = get_scorers(labels_to_events)
+    # Create a model
+    model = get_model(model_name, params=model_params, random_seed=params.random_seed)
 
+    # Create a pipeline
+    if params.use_pipeline:
+        model = make_pipeline(model)
 
-    # Save the model to pickle file
-    model_path = get_repo_path() / MODELS_DIR / MODEL_FILE
-    with open(model_path, 'rb') as f:
-        model = pickle.load(f)
+    # Fit the model
+    model.fit(X=training_data.X, y=training_data.y)
 
+    X1000 = shap.utils.sample(training_data.X, 1000)
+    explainer = shap.Explainer(model.predict, X1000, feature_names=training_data.feature_names)
+    # shap_values = explainer(training_data.X)
+    shap_values = explainer(X1000)
 
-    # Compute metrics
-    metrics = pd.Series(scorers).apply(lambda s: s(model, test_data.X, test_data.y))
-
-    # Compute predictions
-    y_pred = model.predict(test_data.X)
-    cm = confusion_matrix(test_data.y, y_pred)
-    make_confusion_matrix(cm, categories = ['nothing', 'speaking', 'smoking', 'drinking', 'eating'])
-    plt.savefig(get_repo_path() / METRICS_DIR / 'confusion_matrix.png')
-
-
-    # Save the metrics to a JSON file
-    metrics.to_json(get_repo_path() / METRICS_DIR / OUTPUT_JSON)
-
-    feature_importances = model.feature_importances_
-
-    # Create a DataFrame for better visualization
-    importance_df = pd.DataFrame({
-        'Feature': test_data.feature_names,
-        'Importance': feature_importances
-    }).sort_values(by='Importance', ascending=False)
-
-
-    # Take the top 20 most important features
-    top_features = importance_df.head(40)
-
-    # Create a bar plot
-    plt.figure(figsize=(10, 6))
-    plt.barh(top_features['Feature'], top_features['Importance'], color='skyblue')
-    plt.xlabel('Importance')
-    plt.ylabel('Feature')
-    plt.title('Top 20 Feature Importances')
-    plt.gca().invert_yaxis()  # Invert y-axis to show the most important feature at the top
-    plt.tight_layout()
-
-    # Save the plot
-    plt.savefig(get_repo_path() / METRICS_DIR / 'feature_importances.png')
+    # shap.plots.waterfall(shap_values, max_display=14)
+    shap.plots.beeswarm(shap_values)
+    plt.savefig(get_repo_path() / 'metrics' / 'beeswarm.png')
 
 
 if __name__ == '__main__':

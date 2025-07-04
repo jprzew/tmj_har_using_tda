@@ -11,3 +11,4 @@ hydra-core
 matplotlib
 seaborn
 optuna
+shap
