@@ -13,7 +13,7 @@ import pandas as pd
 
 from generate_diagrams import read_test_data
 
-STEP=30
+STEP = 30
 NO_FEAT = 100
 repo_path = get_repo_path()
 model_file = repo_path / 'models/model.pkl'
