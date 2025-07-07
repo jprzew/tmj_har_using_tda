@@ -1,5 +1,5 @@
 random_seed: 42
-features: 30
+features: 100
 cv: logo
 output_categories:
   - 0
