@@ -148,14 +148,14 @@ def main():
 
 
     # Take the top 20 most important features
-    top_features = importance_df.head(40)
+    top_features = importance_df.head(15)
 
     # Create a bar plot
     plt.figure(figsize=(10, 6))
     plt.barh(top_features['Feature'], top_features['Importance'], color='skyblue')
     plt.xlabel('Importance')
     plt.ylabel('Feature')
-    plt.title('Top 20 Feature Importances')
+    plt.title('Top 15 Feature Importances')
     plt.gca().invert_yaxis()  # Invert y-axis to show the most important feature at the top
     plt.tight_layout()
 
