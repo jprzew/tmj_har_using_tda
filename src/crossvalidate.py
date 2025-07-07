@@ -11,6 +11,7 @@ from sklearn.metrics import balanced_accuracy_score, recall_score, matthews_corr
 from sklearn.model_selection import LeaveOneGroupOut, KFold
 import pandas as pd
 import dvc.api
+import matplotlib.pyplot as plt
 
 # Local imports
 from ml_utils import prepare_dataset, get_model, make_pipeline, TrainingData
@@ -139,6 +140,27 @@ def filter_data(training_data: TrainingData, rank_df: pd.DataFrame) -> TrainingD
     return TrainingData(X, y, feature_names, groups)
 
 
+def plot_boxplots(result_series, output_path=None):
+    """
+    Creates boxplots for each list in the result series.
+
+    Parameters:
+        result_series (pd.Series): A pandas Series where each value is a list.
+        output_path (str, optional): Path to save the plot. If None, the plot is displayed.
+    """
+    plt.figure(figsize=(12, 6))
+    plt.boxplot(result_series.values, labels=result_series.index, vert=False)
+    plt.xlabel('Values')
+    plt.ylabel('Metrics')
+    plt.title('Boxplots of Cross-Validation Results')
+    plt.tight_layout()
+
+    if output_path:
+        plt.savefig(output_path)
+    else:
+        plt.show()
+
+
 def main():
     # Load the dataset
     df = pd.read_pickle(get_repo_path() / data_dir / params.input)
@@ -173,6 +195,9 @@ def main():
                                              model,
                                              cv=cv,
                                              groups=training_data.groups)
+
+    plot_boxplots(result.drop(['fit_time', 'score_time']), output_path=get_repo_path() / metrics_dir / f'boxplots.png')
+
     result_dict = result.apply(lambda x: np.mean(x)).to_dict()
 
     # Save the results

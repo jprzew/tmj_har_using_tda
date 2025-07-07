@@ -145,16 +145,7 @@ def compute_diagrams(original_df: pd.DataFrame, key: str, columns: list[str, str
     return result_df
 
 
-def main():
-
-    # Quick fix for not changing the diagrams
-    # Perform copy
-    os.system('cp ../temp/merged_diagrams.pkl data/diagrams.pkl')
-    return
-
-    # Read data
-    original_df = pd.read_pickle(get_repo_path() / data_dir / params.input)
-
+def compute_required_diagrams(original_df: pd.DataFrame) -> dict:
     # Encode labels
     original_df[meta.label_column] = encode_data(original_df[meta.label_column])
 
@@ -168,6 +159,21 @@ def main():
         print('===============================')
         result_df = compute_diagrams(original_df, key, value)
         diagrams[key] = result_df
+
+    return diagrams
+
+
+def main():
+
+    # Quick fix for not changing the diagrams
+    # Perform copy
+    os.system('cp ../temp/merged_diagrams.pkl data/diagrams.pkl')
+    return
+
+    # Read data
+    original_df = pd.read_pickle(get_repo_path() / data_dir / params.input)
+
+    diagrams = compute_required_diagrams(original_df)
 
     # Save results
     with open(get_repo_path() / data_dir / params.output, 'wb') as f:

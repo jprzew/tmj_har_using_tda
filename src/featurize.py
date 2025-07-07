@@ -97,11 +97,7 @@ def tabularize_data(data_dict: dict[str, pd.DataFrame]) -> pd.DataFrame:
     return pd.concat([invariant_df, filtered_df], axis=1)
 
 
-def main():
-
-    # Reading the diagrams
-    diagrams = pd.read_pickle(get_repo_path() / data_dir / params.input)
-
+def compute_all_features(diagrams: dict[str, pd.DataFrame]) -> dict:
     # Calculate features
     print('Calculating features...')
 
@@ -110,6 +106,16 @@ def main():
         print(f'Calculating features for {key}')
         print('===============================')
         results[key] = compute_features(key, value)
+
+    return results
+
+
+def main():
+
+    # Reading the diagrams
+    diagrams = pd.read_pickle(get_repo_path() / data_dir / params.input)
+
+    results = compute_all_features(diagrams)
 
     # Tabularize data
     df = tabularize_data(results)

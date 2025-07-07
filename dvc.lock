@@ -418,8 +418,12 @@ stages:
         crossvalidate:
           random_seed: 42
           features: 100
-          cv: 5
-          output_categories: all
+          cv: logo
+          output_categories:
+          - 0
+          - 1
+          - 4
+          - 8
           use_pipeline: false
           output: crossval_results.json
         metadata:
@@ -467,8 +471,8 @@ stages:
     outs:
     - path: metrics/crossval_results.json
       hash: md5
-      md5: b777fe71ff49916c63cf85e448042f0d
-      size: 584
+      md5: 54b31c326b3c4057222ad896e0f5e8e9
+      size: 557
   optuna:
     cmd: python src/optuna_optim.py
     deps:
