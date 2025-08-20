@@ -36,6 +36,7 @@ stages:
       - metadata
     outs:
     - data/${diagrams.output}
+    frozen: true
   featurize:
     cmd: python src/featurize.py
     deps:
