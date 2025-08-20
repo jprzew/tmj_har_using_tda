@@ -7,7 +7,7 @@ import json
 # Third party imports
 import numpy as np
 from sklearn import model_selection
-from sklearn.metrics import balanced_accuracy_score, recall_score, matthews_corrcoef, make_scorer
+from sklearn.metrics import balanced_accuracy_score, recall_score, matthews_corrcoef, make_scorer, precision_score, f1_score
 from sklearn.model_selection import LeaveOneGroupOut, KFold
 import pandas as pd
 import dvc.api
@@ -55,6 +55,46 @@ params = Params(**params_dict)
 np.random.seed(params.random_seed)
 
 
+# def get_scorers(labels_dict):
+#     """
+#     Build a dict of scorers:
+#       - balanced_accuracy (multiclass)
+#       - matthews (multiclass MCC)
+#       - recall_<event> (per-class, one-vs-rest recall)
+#       - matthews_<event> (per-class, one-vs-rest MCC)
+#       - recall_macro (optional overall macro recall)
+#     labels_dict maps raw label -> human-readable event name (used in keys).
+#     """
+#
+#     scorers = {
+#         "balanced_accuracy": make_scorer(balanced_accuracy_score),
+#         "matthews": make_scorer(matthews_corrcoef),  # multiclass MCC
+#         "recall_macro": make_scorer(recall_score, average="macro", zero_division=0),
+#     }
+#
+#     # One-vs-rest MCC helper (since sklearn's MCC has no pos_label)
+#     def mcc_one_vs_rest(y_true, y_pred, *, pos_label):
+#         y_true_bin = (y_true == pos_label)
+#         y_pred_bin = (y_pred == pos_label)
+#         return matthews_corrcoef(y_true_bin, y_pred_bin)
+#
+#     for label, event in labels_dict.items():
+#         # Per-class recall: one-vs-rest via pos_label (no manual masking needed)
+#         scorers[f"recall_{event}"] = make_scorer(
+#             recall_score,
+#             average="binary",
+#             pos_label=label,
+#             zero_division=0,
+#         )
+#
+#         # Per-class MCC: one-vs-rest via small wrapper
+#         scorers[f"matthews_{event}"] = make_scorer(
+#             mcc_one_vs_rest,
+#             pos_label=label,
+#         )
+#
+#     return scorers
+
 def get_scorers(labels_dict):
 
     def labeled_matthews(y_test, y_pred, value):
@@ -62,6 +102,12 @@ def get_scorers(labels_dict):
 
     def labeled_recall(y_test, y_pred, value):
         return recall_score(y_test == value, y_pred == value, zero_division=0)
+
+    def labeled_precision(y_test, y_pred, value):
+        return precision_score(y_test == value, y_pred == value, zero_division=0)
+
+    def labeled_f1(y_test, y_pred, value):
+        return f1_score(y_test == value, y_pred == value, zero_division=0)
 
     # general scorers
     balanced_accuracy_scorer = make_scorer(balanced_accuracy_score)
@@ -79,6 +125,16 @@ def get_scorers(labels_dict):
     for label, event in labels_dict.items():
         scoring_function = wrapped_partial(labeled_recall, value=label)
         scorers[f'recall_{event}'] = make_scorer(scoring_function)
+
+    # precision scorers
+    for label, event in labels_dict.items():
+        scoring_function = wrapped_partial(labeled_precision, value=label)
+        scorers[f'precision_{event}'] = make_scorer(scoring_function)
+
+    # f1 scorers
+    for label, event in labels_dict.items():
+        scoring_function = wrapped_partial(labeled_f1, value=label)
+        scorers[f'f1_{event}'] = make_scorer(scoring_function)
 
     return scorers
 

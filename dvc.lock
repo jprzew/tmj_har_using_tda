@@ -403,8 +403,8 @@ stages:
       size: 45829230
     - path: src/crossvalidate.py
       hash: md5
-      md5: ec24d9f0e15cd800b190f1d48d537eab
-      size: 5984
+      md5: f116553a9a21e794f7d6efa32647a23f
+      size: 8608
     - path: src/ml_utils.py
       hash: md5
       md5: d7bb2bcb378079cd00d846125afc3101
@@ -418,12 +418,8 @@ stages:
         crossvalidate:
           random_seed: 42
           features: 100
-          cv: logo
-          output_categories:
-          - 0
-          - 1
-          - 4
-          - 8
+          cv: 5
+          output_categories: all
           use_pipeline: false
           output: crossval_results.json
         metadata:
@@ -455,24 +451,12 @@ stages:
           augment_column: augmented
         model:
           name: rf
-          n_estimators: 200
-          criterion: gini
-          max_depth:
-          max_features: sqrt
-          max_leaf_nodes:
-          min_impurity_decrease: 0.0
-          min_samples_leaf: 1
-          min_samples_split: 2
-          min_weight_fraction_leaf: 0.0
-          max_samples:
-          oob_score: false
-          ccp_alpha: 0.0
-          class_weight: balanced
+          n_estimators: 100
     outs:
     - path: metrics/crossval_results.json
       hash: md5
-      md5: 54b31c326b3c4057222ad896e0f5e8e9
-      size: 557
+      md5: 5cca568d2f3613b73521bceff8bc3593
+      size: 813
   optuna:
     cmd: python src/optuna_optim.py
     deps:
