@@ -40,3 +40,20 @@ show_boxplot(df, 'crossvalidate.features')
 df.columns
 
 # %%
+
+# %%
+df = pd.read_csv('feature_crossval.csv')
+
+# %%
+'crossvalidate.features' in df.columns
+
+# %%
+df[['test_balanced_accuracy', 'crossvalidate.features']].boxplot(by='crossvalidate.features')
+
+# %%
+df[['test_balanced_accuracy', 'crossvalidate.features']]
+
+# %%
+df[['test_balanced_accuracy', 'crossvalidate.features']].query('`crossvalidate.features`== 120')
+
+# %%
