@@ -27,7 +27,7 @@ logging.basicConfig(
 logging.info('Started Optuna optimization.')
 
 
-N_TRIALS = 200  # Number of trials for Optuna
+N_TRIALS = 20  # Number of trials for Optuna
 
 # Load metadata
 meta = get_metadata()
